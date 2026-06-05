@@ -1,0 +1,110 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: url("background.png") no-repeat center center fixed;
+  background-size: cover;
+  color: #000;
+}
+
+/* Header */
+header {
+  background-color: #004b93;
+  color: white;
+  padding: 15px 0;
+}
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  margin: auto;
+}
+.logo {
+  height: 60px;
+}
+nav button {
+  background-color: #cfd8dc;
+  border: none;
+  padding: 10px 20px;
+  margin-left: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+}
+nav button:hover {
+  background-color: #90caf9;
+}
+
+/* Login Box */
+.login-box {
+  width: 842px;
+  margin: 60px auto;
+  padding: 30px;
+  background: url("background depan.png") no-repeat center center;
+  background-size: cover;
+  border-radius: 25px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  text-align: center;
+}
+.login-box h2 {
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+.login-box input {
+  width: 80%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+.student-btn, .admin-btn {
+  width: 80%;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #002b7f;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.student-btn:hover, .admin-btn:hover {
+  background-color: #004b93;
+}
+.links {
+  margin-top: 10px;
+}
+.links a {
+  margin: 0 10px;
+  color: #002b7f;
+  text-decoration: none;
+}
+.links a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  background-color: #004b93;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+.notice {
+  margin-bottom: 10px;
+}
+.social a {
+  margin: 0 10px;
+  font-size: 24px;
+  text-decoration: none;
+  color: white;
+}
+.social a:hover {
+  opacity: 0.8;
+}
