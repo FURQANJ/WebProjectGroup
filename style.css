@@ -28,16 +28,22 @@ header {
 .logo {
   height: 60px;
 }
-nav button {
+nav button,
+.nav-button {
   background-color: #cfd8dc;
   border: none;
+  display: inline-block;
   padding: 10px 20px;
   margin-left: 10px;
   border-radius: 20px;
   cursor: pointer;
   font-weight: bold;
+  color: #000;
+  text-decoration: none;
+  font-size: 14px;
 }
-nav button:hover {
+nav button:hover,
+.nav-button:hover {
   background-color: #90caf9;
 }
 
@@ -107,4 +113,98 @@ footer {
 }
 .social a:hover {
   opacity: 0.8;
+}
+
+/* Basic pages for header navigation */
+.content-page {
+  min-height: calc(100vh - 90px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 20px;
+}
+
+.content-box {
+  width: min(900px, 100%);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.content-box h1 {
+  margin-bottom: 15px;
+  color: #004b93;
+}
+
+/* Popup message */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.popup-overlay.show {
+  display: flex;
+}
+
+.popup-box {
+  width: min(560px, 90%);
+  background: #fff;
+  border-radius: 18px;
+  padding: 30px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+.popup-box h2 {
+  margin-bottom: 15px;
+  color: #004b93;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.popup-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #004b93;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.category-options {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.category-card {
+  width: 48%;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.category-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.category-card:hover {
+  transform: translateY(-2px);
 }
