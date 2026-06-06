@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pusat Sukan Court Booking</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  text-align: center;
+  background: url('Main Background.png') no-repeat center center fixed;
+  background-size: cover;
+}
+
+header {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+nav button {
+  margin: 0 5px;
+  padding: 10px 15px;
+  border: none;
+  background: #0077cc;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+nav button:hover 
+{
+  background: #005fa3;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 100px;
+}
+
+.booking-option {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 30px;
+  border-radius: 10px;
+  width: 250px;
+}
+
+.booking-option h2 {
+  margin-bottom: 15px;
+}
+
+.booking-option button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #28a745;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.booking-option button:hover 
+{
+  background: #218838;
+}
+
+</style>
+<body>
+  <header>
+    <div class="logo">
+      <h1>UTeM - Pusat Sukan</h1>
+    </div>
+    <nav>
+      <button>BOOKING SPACE</button>
+      <button>APPROVAL/STATUS</button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="booking-option">
+      <h2>COURT BOOKING with equipment</h2>
+      <p>Tempah gelanggang bersama raket & shuttlecock.</p>
+      <button>Book Now</button>
+    </div>
+
+    <div class="booking-option">
+      <h2>COURT BOOKING court only</h2>
+      <p>Tempah gelanggang sahaja tanpa peralatan.</p>
+      <button>Book Now</button>
+    </div>
+  </main>
+</body>
+</html>
