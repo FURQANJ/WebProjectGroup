@@ -1,13 +1,14 @@
-/* Reset */
-* {
+* 
+{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
+body 
+{
   font-family: Arial, sans-serif;
-  background: url("background.png") no-repeat center center fixed;
+  background: url("Log In Background 2.png") no-repeat center center fixed;
   background-size: cover;
   color: #000;
 }
@@ -52,7 +53,7 @@ nav button:hover,
   width: 842px;
   margin: 60px auto;
   padding: 30px;
-  background: url("background depan.png") no-repeat center center;
+  background: url("Log In Background 1.png") no-repeat center center;
   background-size: cover;
   border-radius: 25px;
   box-shadow: 0 0 15px rgba(0,0,0,0.3);
