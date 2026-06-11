@@ -142,6 +142,28 @@
         <input type="time" id="apptTo" name="apptTo">
       </div>
 
+      <div class="form-group">
+          <label for="court">Equipment</label><br>
+          <select id="court" name="court">
+            <option value="" disabled selected>Choose Equipment</option>
+            <option value="Tennis1">Tennis Ball (1)</option>
+            <option value="Tennis2">Tennis Ball (2)</option>
+            <option value="Badminton1">Badminton Shuttlecock (1)</option>
+            <option value="Badminton2">Badminton Shuttlecock (2)</option>
+            <option value="Basketball1">Basketball (1)</option>
+            <option value="Basketball2">Basketball (2)</option>
+            <option value="Futsal1">Futsal Ball (1)</option>
+            <option value="Futsal2">Futsal Ball (2)</option>
+            <option value="Football">Football</option>
+            <option value="Rugby">Rugby Ball</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+            <label>Quantity</label>
+            <input type="number" id="QtyInput" min="0" max="5" required>
+        </div>
+
       <button type="submit">Next</button>
 
     </form>
