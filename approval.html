@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Approval / Status - Pusat Sukan UTeM</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: #000;
+      background: url('Main Background.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    header {
+      background: #D3D3D3;
+      width: 350px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 20px;
+    }
+
+    header img {
+      width: 60%;
+      height: auto;
+    }
+
+    nav {
+      margin-top: 50px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 80%;
+    }
+
+    nav button {
+      padding: 15px;
+      border: 2px solid black;
+      background: #D3D3D3;
+      color: #000;
+      font-size: 12px;
+      font-weight: bold;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .container {
+      width: 70%;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #000;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #D3D3D3;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="UTeM White.png" alt="UTeM Logo">
+    <nav>
+      <button onclick="window.location.href='BookingPageEquipment.html'">BOOKING SPACE</button>
+      <button onclick="window.location.href='approval.html'">APPROVAL / STATUS</button>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>APPROVAL / STATUS</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Booking ID</th>
+          <th>Name / Organization</th>
+          <th>Number</th>
+          <th>Court</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php include 'approval.php'; ?>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
