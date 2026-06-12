@@ -1,9 +1,42 @@
+<?php
+ob_start(); 
+
+$users = [
+    "FurqanStudent" => ["password" => "bijak", "role" => "student"],
+    "FurqanAdmin"   => ["password" => "bagus", "role" => "admin"]
+];
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $userId = $_POST['userId'];
+    $password = $_POST['password'];
+    $role = $_POST['role'];
+
+    if (isset($users[$userId]) && $users[$userId]['password'] === $password) {
+        if ($users[$userId]['role'] === $role) {
+            if ($role == "student") {
+                header("Location: MainPage.html"); // Booking Space
+                exit();
+            } elseif ($role == "admin") {
+                header("Location: adminhome.html"); // Approval
+                exit();
+            }
+        } else {
+            echo "<script>alert('Role tidak padan dengan akaun!');</script>";
+        }
+    } else {
+        echo "<script>alert('User ID atau Password salah!');</script>";
+    }
+}
+
+ob_end_flush(); 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Pusat Sukan UTeM</title>
   <link rel="stylesheet" href="style.css">
+  
 </head>
 <body>
   <!-- Header -->
@@ -30,11 +63,11 @@
   <main>
     <div class="login-box">
       <h2>WELCOME TO PUSAT SUKAN UTEM</h2>
-      <form>
-        <input type="text" placeholder="User ID" required>
-        <input type="password" placeholder="Password" required>
-        <button type="submit" class="student-btn">Login For Student</button>
-        <button type="submit" class="admin-btn">Login For Admin</button>
+      <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+        <input type="text" name="userId" placeholder="User ID" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit" name="role" value="student" class="student-btn">Login For Student</button>
+        <button type="submit" name="role" value="admin" class="admin-btn">Login For Admin</button>
       </form>
       <div class="links">
         <a href="#">Forgot Password</a>
@@ -42,6 +75,9 @@
       </div>
     </div>
   </main>
+
+
+
 
   <!-- Footer -->
   <footer>
