@@ -264,12 +264,63 @@
           </div>
 
         <div class="button-row">
-          <button type="submit">Next</button>
-        </div>
+  <button type="button" onclick="goNext()">
+    Next
+  </button>
+</div>
 
       </form>
     </div>
   </main>
+    <script>
+  function goNext() {
+    const court = document.getElementById("court").value;
+    const dateChoose = document.getElementById("dateChoose").value;
+    const apptFrom = document.getElementById("apptFrom").value;
+    const apptTo = document.getElementById("apptTo").value;
+    const equipment = document.getElementById("equipment").value;
+    const quantity = document.getElementById("QtyInput").value;
+
+    if (!court || !dateChoose || !apptFrom || !apptTo || !equipment || !quantity) {
+      alert("Please fill in all the information before continuing.");
+      return;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const selectedDate = new Date(dateChoose);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    if (selectedDate < today) {
+      alert("You cannot choose a date that has already passed.");
+      return;
+    }
+
+    const startTime = new Date(`${dateChoose}T${apptFrom}`);
+    const endTime = new Date(`${dateChoose}T${apptTo}`);
+
+    if (endTime <= startTime) {
+      alert("The end time must be after the start time.");
+      return;
+    }
+
+    const differenceInHours = (endTime - startTime) / (1000 * 60 * 60);
+
+    if (differenceInHours > 3) {
+      alert("Booking time cannot exceed 3 hours.");
+      return;
+    }
+
+    if (quantity < 1 || quantity > 5) {
+      alert("Quantity must be between 1 and 5.");
+      return;
+    }
+
+    window.location.href = "bookingSpaceFillinfoEquipment.html";
+  }
+</script>
+
 
 </body>
 </html>
