@@ -196,6 +196,22 @@
 
 <body>
 
+  <?php
+    if (isset($_POST['submit']))
+        {
+            $data = array($_POST['fullName'], $_POST['phoneNumber'], $_POST['email'], $_POST['reason'],);
+
+            $fp = fopen("details.txt", "a") or die("Couldn't open file for writing !!");
+
+            @fwrite($fp, "\n");
+            foreach ($data as $v)
+                {
+                    @fwrite($fp, "$v\t");
+                }
+            @fclose($fp);
+        }
+    ?>
+
   <header>
     <div class="logo">
       <img src="UTeM Clear.png" alt="UTeM Logo">
@@ -213,7 +229,7 @@
     <div id="formSection">
       <div class="form-title">Booking Space</div>
 
-      <form onsubmit="event.preventDefault(); processData();">
+      <form action="" method="POST">
         <div class="form-group">
           <label for="fullName">Full Name</label>
           <input type="text" id="fullName" name="fullName" placeholder="Name">
@@ -238,7 +254,7 @@
 
         <div class="button-row">
           <button type="button">Back</button>
-          <button type="submit">Submit</button>
+          <button type="submit" name="submit">Submit</button>
         </div>
       </form>
     </div>
