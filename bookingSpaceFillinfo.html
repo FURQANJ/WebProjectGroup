@@ -5,11 +5,13 @@
   <title>Booking Space</title>
 
   <style>
-    * {
+    * 
+    {
       box-sizing: border-box;
     }
 
-    body {
+    body 
+    {
       margin: 0;
       font-family: Arial, sans-serif;
       color: #000;
@@ -19,7 +21,8 @@
       display: flex;
     }
 
-    header {
+    header 
+    {
       width: 250px;
       min-height: 100vh;
       background: #d3d3d3;
@@ -29,31 +32,61 @@
       padding-top: 50px;
     }
 
-    .logo img {
+    .logo img 
+    {
       width: 150px;
       height: auto;
       margin-bottom: 95px;
     }
 
-    nav {
+    nav 
+    {
       width: 100%;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    nav button {
+    nav 
+    {
       width: 100%;
-      padding: 7px 12px;
-      border: 2px solid #000;
-      background: #d3d3d3;
-      color: #000;
-      text-align: left;
-      font-size: 12px;
-      cursor: pointer;
+      margin-top: 20px;
     }
 
-    main {
+    nav ul 
+    {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+
+    nav ul li 
+    {
+      width: 100%;
+      margin-bottom: 5px;
+    }
+
+    nav ul li a 
+    {
+      display: block;
+      padding: 15px 25px;
+      text-decoration: none;
+      color: #000000; 
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    nav ul li a:hover 
+    {
+      background-color: #c4c4c4; 
+      color: #000000; 
+      border-left: 4px solid #000000; 
+      padding-left: 30px;
+    }
+
+    main 
+    {
       flex: 1;
       position: relative;
       display: flex;
@@ -62,28 +95,8 @@
       padding: 40px;
     }
 
-    .back-icon {
-      position: absolute;
-  top: 43px;
-  left: 55px;
-  width: 30px;
-  height: 30px;
-  border: 3px solid #294797;
-  border-radius: 50%;
-  color: #294797;
-  background: transparent;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-  cursor: pointer;
-  box-shadow: 0 0 0 2px #000000;
-    }
-
-    #formSection {
+    #formSection 
+    {
       width: 600px;
       min-height: 495px;
       background: #fff;
@@ -93,41 +106,47 @@
       box-shadow: 0 0 4px rgba(0,0,0,0.15);
     }
 
-    .form-title {
+    .form-title 
+    {
       background: #d9d9d9;
       padding: 12px 28px;
       font-size: 18px;
       font-weight: bold;
     }
 
-    form {
+    form 
+    {
       padding: 30px 28px 25px;
     }
 
-    .form-group {
+    .form-group 
+    {
       margin-bottom: 20px;
       text-align: left;
     }
 
-    .form-row {
+    .form-row 
+    {
       display: flex;
       gap: 85px;
       margin-bottom: 20px;
     }
 
-    .form-row .form-group {
+    .form-row .form-group 
+    {
       flex: 1;
       margin-bottom: 0;
     }
 
-    label {
+    label 
+    {
       display: block;
       margin-bottom: 7px;
       font-size: 13px;
     }
 
-    input,
-    textarea {
+    input, textarea 
+    {
       width: 100%;
       border: 1px solid #ddd;
       border-radius: 7px;
@@ -136,17 +155,20 @@
       font-family: Arial, sans-serif;
     }
 
-    input {
+    input 
+    {
       height: 31px;
     }
 
-    textarea {
+    textarea 
+    {
       width: 365px;
       height: 130px;
       resize: none;
     }
 
-    .button-row {
+    .button-row 
+    {
       margin-top: 72px;
       display: flex;
       justify-content: space-between;
@@ -154,7 +176,8 @@
       padding: 0 10px;
     }
 
-    button {
+    button 
+    {
       border: none;
       border-radius: 6px;
       background: #294797;
@@ -164,7 +187,8 @@
       cursor: pointer;
     }
 
-    button:hover {
+    button:hover 
+    {
       background: #1f3675;
     }
   </style>
@@ -178,14 +202,14 @@
     </div>
 
     <nav>
-      <button type="button">BOOKING SPACE</button>
-      <button type="button">APPROVAL/STATUS</button>
+      <ul>
+        <li><a href="MainPage.html">BOOKING SPACE</a></li>
+        <li><a href="approval.html">APPROVAL/STATUS</a></li>
+      </ul>
     </nav>
   </header>
 
   <main>
-    <button type="button" class="back-icon">&#8592;</button>
-
     <div id="formSection">
       <div class="form-title">Booking Space</div>
 
