@@ -1,35 +1,57 @@
 <?php
+session_start(); 
 ob_start(); 
-
-$users = [
-    "FurqanStudent" => ["password" => "bijak", "role" => "student"],
-    "FurqanAdmin"   => ["password" => "bagus", "role" => "admin"]
-];
+include "db.php"; // connect dgn database
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $userId = $_POST['userId'];
+    $userId = mysqli_real_escape_string($conn, $_POST['userId']);
     $password = $_POST['password'];
-    $role = $_POST['role'];
+    $role = $_POST['role']; 
 
-    if (isset($users[$userId]) && $users[$userId]['password'] === $password) {
-        if ($users[$userId]['role'] === $role) {
-            if ($role == "student") {
-                header("Location: MainPage.html"); // Booking Space
+    if ($role == "admin") {
+        $sql = "SELECT * FROM admin WHERE admin_id = '$userId' OR venue_and_equipment_update = '$userId' LIMIT 1";
+        $result = mysqli_query($conn, $sql);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            $userRow = mysqli_fetch_assoc($result);
+            
+            if ($userRow['password'] === $password) {
+                $_SESSION['admin_id'] = $userRow['admin_id']; 
+                $_SESSION['role'] = "admin";
+                
+                header("Location: adminhome.html");
                 exit();
-            } elseif ($role == "admin") {
-                header("Location: adminhome.html"); // Approval
-                exit();
+            } else {
+                echo "<script>alert('Password Admin salah!');</script>";
             }
         } else {
-            echo "<script>alert('Role tidak padan dengan akaun!');</script>";
+            echo "<script>alert('Akaun Admin tidak dijumpai!');</script>";
         }
-    } else {
-        echo "<script>alert('User ID atau Password salah!');</script>";
+
+    } else if ($role == "student") {
+        $sql = "SELECT * FROM guest WHERE guest_id = '$userId' LIMIT 1";
+        $result = mysqli_query($conn, $sql);
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            $userRow = mysqli_fetch_assoc($result);
+            
+            if ($userRow['password'] === $password) {
+                $_SESSION['guest_id'] = $userRow['guest_id'];
+                $_SESSION['role'] = "student";
+                
+                header("Location: MainPage.html");
+                exit();
+            } else {
+                echo "<script>alert('Password Student salah!');</script>";
+            }
+        } else {
+            echo "<script>alert('Akaun Student tidak dijumpai!');</script>";
+        }
     }
 }
-
 ob_end_flush(); 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,7 +61,6 @@ ob_end_flush();
   
 </head>
 <body>
-  <!-- Header -->
   <header>
     <div class="header-container">
       <img src="UTeM Clear.png" alt="UTeM Logo" class="logo">
@@ -76,10 +97,6 @@ ob_end_flush();
     </div>
   </main>
 
-
-
-
-  <!-- Footer -->
   <footer>
     <div class="notice">
       <p><strong>Peringatan:</strong></p>

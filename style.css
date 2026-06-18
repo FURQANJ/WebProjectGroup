@@ -13,7 +13,6 @@ body
   color: #000;
 }
 
-/* Header */
 header {
   background-color: #004b93;
   color: white;
@@ -48,7 +47,6 @@ nav button:hover,
   background-color: #90caf9;
 }
 
-/* Login Box */
 .login-box {
   width: 842px;
   margin: 60px auto;
@@ -96,7 +94,6 @@ nav button:hover,
   text-decoration: underline;
 }
 
-/* Footer */
 footer {
   background-color: #004b93;
   color: white;
@@ -116,7 +113,6 @@ footer {
   opacity: 0.8;
 }
 
-/* Basic pages for header navigation */
 .content-page {
   min-height: calc(100vh - 90px);
   display: flex;
@@ -139,7 +135,6 @@ footer {
   color: #004b93;
 }
 
-/* Popup message */
 .popup-overlay {
   display: none;
   position: fixed;

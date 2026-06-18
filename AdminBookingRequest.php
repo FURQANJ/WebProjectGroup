@@ -1,7 +1,7 @@
 <?php
 include "db.php";
 
-$sql = "SELECT * FROM bookings WHERE status = 'Pending'";
+$sql = "SELECT * FROM booking WHERE status = 'Pending'";
 $result = mysqli_query($conn, $sql);
 ?>
 

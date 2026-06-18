@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Pusat Sukan Court Booking - Approval</title>
@@ -26,7 +27,7 @@
       flex-direction: column;
       align-items: center;
       padding-top: 50px;
-      flex-shrink: 0; /* Mengelakkan sidebar mengecil */
+      flex-shrink: 0;
     }
 
     .logo img {
@@ -56,16 +57,16 @@
       display: block;
       padding: 15px 25px;
       text-decoration: none;
-      color: #000000; 
+      color: #000000;
       font-size: 14px;
       font-weight: 600;
       transition: all 0.3s ease;
     }
 
     nav ul li a:hover {
-      background-color: #c4c4c4; 
-      color: #000000; 
-      border-left: 4px solid #000000; 
+      background-color: #c4c4c4;
+      color: #000000;
+      border-left: 4px solid #000000;
       padding-left: 30px;
     }
 
@@ -77,7 +78,6 @@
       padding: 40px;
     }
 
-    /* GAYA CSS DARIPADA KAWAN ANDA */
     .container {
       width: 95%;
       max-width: 1400px;
@@ -86,7 +86,7 @@
       padding: 30px;
       border-radius: 10px;
       text-align: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
     table {
@@ -96,7 +96,8 @@
       margin-top: 20px;
     }
 
-    table th, table td {
+    table th,
+    table td {
       border: 1px solid #bdc3c7;
       padding: 12px;
       text-align: center;
@@ -113,9 +114,10 @@
     }
   </style>
 </head>
+
 <body>
-  
-  <!-- Menu Sidebar Anda -->
+
+
   <header>
     <div class="logo">
       <img src="UTeM Clear.png" alt="Pusat Sukan Logo">
@@ -124,11 +126,12 @@
       <ul>
         <li><a href="MainPage.html">BOOKING SPACE</a></li>
         <li><a href="Approval.php">APPROVAL/STATUS</a></li>
+        <li style="margin-top: 30px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
       </ul>
     </nav>
   </header>
 
-  <!-- Bahagian Kandungan Utama (Gabungan kawan anda) -->
+
   <section>
     <div class="container">
       <h2>APPROVAL / STATUS</h2>
@@ -145,51 +148,80 @@
             <th>Time To</th>
             <th>Equipment</th>
             <th>Quantity</th>
-            <th>Status</th> <!-- Ditambah jika perlu status padanan kod kawan anda -->
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
           <?php
-          // Membuka dan membaca fail details.txt secara selamat
-          if (file_exists("details.txt")) {
-              $fp = fopen("details.txt", "r") or die("Couldn’t open the file");
+session_start();
+include "db.php"; 
 
-              while (!feof($fp)) {
-                  $data = fgets($fp, 1024);
-                  $values = chop($data);
-                  
-                  // Elak baris kosong di akhir fail daripada create row kosong
-                  if (empty($values)) continue; 
-                  
-                  $val = explode("\t", $values); 
 
-                  // Mengendalikan kes jika data equipment/quantity kosong supaya tak error
-                  $equipment = (!isset($val[8]) || trim($val[8]) === '') ? '-' : htmlspecialchars($val[8]);
-                  $quantity  = (!isset($val[9]) || trim($val[9]) === '') ? '-' : htmlspecialchars($val[9]);
+$current_guest = $_SESSION['guest_id'] ?? null;
 
-                  echo "<tr>";
-                  echo "<td>" . htmlspecialchars($val[0] ?? '-') . "</td>";
-                  echo "<td>" . htmlspecialchars($val[1] ?? '-') . "</td>";
-                  echo "<td>" . htmlspecialchars($val[2] ?? '-') . "</td>";
-                  echo "<td>" . htmlspecialchars($val[3] ?? '-') . "</td>";
-                  echo "<td>" . htmlspecialchars($val[4] ?? '-') . "</td>";
-                  echo "<td>" . htmlspecialchars($val[5] ?? '-') . "</td>";
-                  echo "<td>" . htmlspecialchars($val[6] ?? '-') . "</td>";
-                  echo "<td>" . htmlspecialchars($val[7] ?? '-') . "</td>";
-                  echo "<td>" . $equipment . "</td>"; // Menggunakan sempang jika null
-                  echo "<td>" . $quantity . "</td>";  // Menggunakan sempang jika null
-                  echo "<td><strong style='color: #e67e22;'>Pending</strong></td>"; 
-                  echo "</tr>";
-              }
-              fclose($fp);
-          } else {
-              echo "<tr><td colspan='11'>No booking records found.</td></tr>";
-          }
-          ?>
+if ($current_guest) {
+   
+    $sql = "SELECT b.booking_id, b.booking_status, b.booking_details, b.guest_id
+            FROM booking b 
+            WHERE b.guest_id = '$current_guest'
+            ORDER BY b.booking_id DESC";
+
+    $result = mysqli_query($conn, $sql);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+         
+            $details_string = $row['booking_details'] ?? '';
+            $val = explode("\t", $details_string);
+
+          
+            $name      = htmlspecialchars($val[0] ?? '-');
+            $phone     = htmlspecialchars($val[1] ?? '-');
+            $email     = htmlspecialchars($val[2] ?? '-');
+            $reason    = htmlspecialchars($val[3] ?? '-');
+            $court     = htmlspecialchars($val[4] ?? '-');
+            $date      = htmlspecialchars($val[5] ?? '-');
+            $timeFrom  = htmlspecialchars($val[6] ?? '-');
+            $timeTo    = htmlspecialchars($val[7] ?? '-');
+            $equipment = (!isset($val[8]) || trim($val[8]) === '') ? '-' : htmlspecialchars($val[8]);
+            $quantity  = (!isset($val[9]) || trim($val[9]) === '') ? '-' : htmlspecialchars($val[9]);
+
+     
+            $status = $row['booking_status'] ?? 'Pending';
+            if ($status === 'Approved') {
+                $status_color = '#2e7d32'; 
+            } elseif ($status === 'Rejected') {
+                $status_color = '#c62828';
+            } else {
+                $status_color = '#e67e22'; 
+            }
+
+            echo "<tr>";
+            echo "<td>" . $name . "</td>";
+            echo "<td>" . $phone . "</td>";
+            echo "<td>" . $email . "</td>";
+            echo "<td>" . $reason . "</td>";
+            echo "<td>" . $court . "</td>";
+            echo "<td>" . $date . "</td>";
+            echo "<td>" . $timeFrom . "</td>";
+            echo "<td>" . $timeTo . "</td>";
+            echo "<td>" . $equipment . "</td>";
+            echo "<td>" . $quantity . "</td>";
+            echo "<td><strong style='color: " . $status_color . ";'>" . htmlspecialchars($status) . "</strong></td>";
+            echo "</tr>";
+        }
+    } else {
+        echo "<tr><td colspan='11'>No database booking records found for your account.</td></tr>";
+    }
+} else {
+    echo "<tr><td colspan='11' style='color: #c62828;'>Please log in to view your reservation status.</td></tr>";
+}
+?>
         </tbody>
       </table>
     </div>
   </section>
 
 </body>
+
 </html>

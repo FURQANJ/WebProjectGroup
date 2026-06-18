@@ -3,7 +3,7 @@ include "db.php";
 
 $booking_id = $_GET['id'];
 
-$sql = "SELECT * FROM bookings WHERE booking_id = '$booking_id'";
+$sql = "SELECT * FROM booking WHERE booking_id = '$booking_id'";
 $result = mysqli_query($conn, $sql);
 $booking = mysqli_fetch_assoc($result);
 ?>
