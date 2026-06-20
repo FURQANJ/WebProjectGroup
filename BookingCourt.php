@@ -212,6 +212,7 @@
   </header>
 
   <main>
+    <form method="POST" action="AdminBookingLog.php">
     <div id="formSection">
       <div class="form-title">Booking Space</div>
 
@@ -288,6 +289,7 @@
 
       </form>
     </div>
+</form>
   </main>
 
   <script>

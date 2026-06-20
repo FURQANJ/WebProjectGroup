@@ -30,21 +30,21 @@ $booking = mysqli_fetch_assoc($result);
             </div>
 
             <div class="details-body">
-                <p><?php echo $booking['booking_id']; ?></p>
-                <p><?php echo $booking['name']; ?></p>
-                <p><?php echo $booking['phone']; ?></p>
+                <!-- <p><?php echo $booking['booking_id']; ?></p> -->
+                <p><?php echo $booking['fullName']; ?></p>
+                <p><?php echo $booking['phoneNumber']; ?></p>
                 <p><?php echo $booking['email']; ?></p>
                 <p><?php echo $booking['court']; ?></p>
                 <p><?php echo $booking['equipment']; ?></p>
 
                 <p>
-                    <?php echo $booking['booking_date']; ?>
-                    (<?php echo $booking['start_time']; ?> -
-                    <?php echo $booking['end_time']; ?>)
+                    <?php echo $booking['date']; ?>
+                    (<?php echo $booking['timeFrom']; ?> -
+                    <?php echo $booking['timeTo']; ?>)
                 </p>
 
-                <label>Reason</label>
-                <textarea readonly><?php echo $booking['reason']; ?></textarea>
+                <!-- <label>Reason</label>
+                <textarea readonly><?php echo $booking['reason']; ?></textarea> -->
 
                 <?php if ($booking['status'] == 'Pending') { ?>
 
