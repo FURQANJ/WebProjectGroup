@@ -9,14 +9,22 @@
   <!-- Header -->
   <header>
     <div class="header-container">
-      <img src="utemlogo.png" alt="UTeM Logo" class="logo">
+      <img src="UTeM Clear.png" alt="UTeM Logo" class="logo">
       <nav>
-        <button>Location</button>
-        <button>Categories</button>
-        <button>Help</button>
+        <button type="button" onclick="openPopup('Location', 'Pusat Sukan UTeM.')">Location</button>
+        <button type="button" onclick="openCategoriesPopup()">Categories</button>
+        <button type="button" onclick="openPopup('Help', 'Add your help content here.')">Help</button>
       </nav>
     </div>
   </header>
+
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup-box">
+      <button type="button" class="popup-close" onclick="closePopup()">X</button>
+      <h2 id="popupTitle"></h2>
+      <div id="popupContent"></div>
+    </div>
+  </div>
 
   <!-- Main Login Section -->
   <main>
@@ -49,5 +57,7 @@
       <a href="https://www.facebook.com/PusatSukanUTeM/">📘</a>
     </div>
   </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
