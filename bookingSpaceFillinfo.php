@@ -42,6 +42,14 @@
     nav 
     {
       width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    nav 
+    {
+      width: 100%;
       margin-top: 20px;
     }
 
@@ -108,7 +116,7 @@
 
     form 
     {
-      padding: 30px 28px 20px;
+      padding: 30px 28px 25px;
     }
 
     .form-group 
@@ -120,7 +128,7 @@
     .form-row 
     {
       display: flex;
-      gap: 40px; 
+      gap: 85px;
       margin-bottom: 20px;
     }
 
@@ -137,7 +145,7 @@
       font-size: 13px;
     }
 
-    input, textarea, select 
+    input, textarea 
     {
       width: 100%;
       border: 1px solid #ddd;
@@ -149,27 +157,22 @@
 
     input 
     {
-      height: 35px;
+      height: 31px;
     }
 
     textarea 
     {
-      width: 100%;
+      width: 365px;
       height: 130px;
       resize: none;
     }
 
-    select 
-    {
-      height: 35px;
-      background: #fff;
-    }
-
     .button-row 
     {
-      margin-top: 150px;
+      margin-top: 72px;
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
       padding: 0 10px;
     }
 
@@ -193,6 +196,22 @@
 
 <body>
 
+  <?php
+    if (isset($_POST['submit']))
+        {
+            $data = array($_POST['fullName'], $_POST['phoneNumber'], $_POST['email'], $_POST['reason'],);
+
+            $fp = fopen("details.txt", "a") or die("Couldn't open file for writing !!");
+
+            @fwrite($fp, "\n");
+            foreach ($data as $v)
+                {
+                    @fwrite($fp, "$v\t");
+                }
+            @fclose($fp);
+        }
+    ?>
+
   <header>
     <div class="logo">
       <img src="UTeM Clear.png" alt="UTeM Logo">
@@ -209,93 +228,74 @@
   <main>
     <div id="formSection">
       <div class="form-title">Booking Space</div>
-      <form onsubmit="event.preventDefault(); processData();">
+
+<<<<<<<< HEAD:bookingSpaceFillinfo.php
+      <form action="" method="POST">
+========
+      <form onsubmit="submitForm(event);">
+>>>>>>>> f9080cff473532515af9c6385d2df9214e1739b9:bookingSpaceFillinfoCourt.html
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" name="fullName" placeholder="Name">
+        </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label for="court">Court</label>
-            <select id="court" name="court">
-              <option value="" disabled selected>Choose Court</option>
-              <option value="Tennis1">Tennis Court (1)</option>
-              <option value="Tennis2">Tennis Court (2)</option>
-              <option value="Badminton1">Badminton Court (1)</option>
-              <option value="Badminton2">Badminton Court (2)</option>
-              <option value="Basketball1">Basketball Court (1)</option>
-              <option value="Basketball2">Basketball Court (2)</option>
-              <option value="Futsal1">Futsal Court (1)</option>
-              <option value="Futsal2">Futsal Court (2)</option>
-              <option value="Football">Football Field</option>
-              <option value="Rugby">Rugby Field</option>
-            </select>
+            <label for="phoneNumber">No. H/P</label>
+            <input
+                  type="tel"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  placeholder="Phone number"
+                  inputmode="numeric"
+                  pattern="[0-9]*"
+                  oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                >
           </div>
 
           <div class="form-group">
-            <label for="dateChoose">Date</label>
-            <input type="date" id="dateChoose" name="dateChoose">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Email">
           </div>
         </div>
 
-          <div class="form-group" style="max-width: 250px;">
-            <label for="apptFrom">Time Slot ( From )</label>
-            <input type="time" id="apptFrom" name="apptFrom">
-          </div>
-
-         <div class="form-group" style="max-width: 250px;">
-            <label for="apptTo">Time Slot ( To )</label>
-            <input type="time" id="apptTo" name="apptTo">
-          </div>
+        <div class="form-group">
+          <label for="reason">Reason</label>
+          <textarea id="reason" name="reason" placeholder="Reason"></textarea>
+        </div>
 
         <div class="button-row">
-  <button type="button" onclick="goNext()">
-    Next
+<<<<<<<< HEAD:bookingSpaceFillinfo.php
+          <button type="button">Back</button>
+          <button type="submit" name="submit">Submit</button>
+        </div>
+========
+  <button type="button" onclick="history.back()">
+    Back
   </button>
-</div>
-        
 
+  <button type="submit">Submit</button>
+</div>
+>>>>>>>> f9080cff473532515af9c6385d2df9214e1739b9:bookingSpaceFillinfoCourt.html
       </form>
     </div>
   </main>
     <script>
-  function goNext() {
-    const court = document.getElementById("court").value;
-    const dateChoose = document.getElementById("dateChoose").value;
-    const apptFrom = document.getElementById("apptFrom").value;
-    const apptTo = document.getElementById("apptTo").value;
+  function submitForm(event) {
+    event.preventDefault();
 
-    if (!court || !dateChoose || !apptFrom || !apptTo) {
-      alert("Please fill in all the information before continuing.");
+    const fullName = document.getElementById("fullName").value;
+    const phoneNumber = document.getElementById("phoneNumber").value;
+    const email = document.getElementById("email").value;
+    const reason = document.getElementById("reason").value;
+
+    if (!fullName || !phoneNumber || !email || !reason) {
+      alert("Please fill in all the information before submitting.");
       return;
     }
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const selectedDate = new Date(dateChoose);
-    selectedDate.setHours(0, 0, 0, 0);
-
-    if (selectedDate < today) {
-      alert("You cannot choose a date that has already passed.");
-      return;
-    }
-
-    const startTime = new Date(`${dateChoose}T${apptFrom}`);
-    const endTime = new Date(`${dateChoose}T${apptTo}`);
-
-    if (endTime <= startTime) {
-      alert("The end time must be after the start time.");
-      return;
-    }
-
-    const differenceInHours = (endTime - startTime) / (1000 * 60 * 60);
-
-    if (differenceInHours > 3) {
-      alert("Booking time cannot exceed 3 hours.");
-      return;
-    }
-
-    window.location.href = "bookingSpaceFillinfoCourt.html";
+    alert("Booking submitted successfully!");
   }
-</script>
 </script>
 </body>
 </html>

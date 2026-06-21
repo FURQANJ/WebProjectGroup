@@ -108,7 +108,7 @@
 
     form 
     {
-      padding: 30px 28px 20px;
+      padding: 30px 28px 25px;
     }
 
     .form-group 
@@ -167,7 +167,7 @@
 
     .button-row 
     {
-      margin-top: 150px;
+      margin-top: 40px;
       display: flex;
       justify-content: flex-end;
       padding: 0 10px;
@@ -193,6 +193,22 @@
 
 <body>
 
+  <?php
+    if (isset($_POST['submit']))
+        {
+            $data = array($_POST['court'], $_POST['date'], $_POST['timeFrom'], $_POST['timeTo'], $_POST['equipment'], $_POST['quantity']);
+
+            $fp = fopen("details.txt", "a") or die("Couldn't open file for writing !!");
+
+            @fwrite($fp, "\n");
+            foreach ($data as $v)
+                {
+                    @fwrite($fp, "$v\t");
+                }
+            @fclose($fp);
+        }
+  ?>
+
   <header>
     <div class="logo">
       <img src="UTeM Clear.png" alt="UTeM Logo">
@@ -209,7 +225,7 @@
   <main>
     <div id="formSection">
       <div class="form-title">Booking Space</div>
-      <form onsubmit="event.preventDefault(); processData();">
+      <form action ="" method="post">
 
         <div class="form-row">
           <div class="form-group">
@@ -245,12 +261,27 @@
             <input type="time" id="apptTo" name="apptTo">
           </div>
 
+          <div class="form-group"style="max-width: 250px">
+            <label for="equipment">Equipment</label>
+            <select id="equipment" name="equipment">
+              <option value="" disabled selected>Choose Equipment</option>
+              <option value="TennisBall">Tennis Ball</option>
+              <option value="BadmintonCock">Badminton Shuttlecock</option>
+              <option value="BasketBall">Basketball Ball</option>
+              <option value="FutsalBall">FutsalBall</option>
+              <option value="FootBall">Football Ball</option>
+              <option value="Rugby">Rugby Ball</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="max-width: 50px;">
+            <label for="QtyInput">Quantity</label>
+            <input type="number" id="QtyInput" min="0" max="5" required>
+          </div>
+
         <div class="button-row">
-  <button type="button" onclick="goNext()">
-    Next
-  </button>
+  <button type="submit" name="submit" onclick="goNext()">Next</button>
 </div>
-        
 
       </form>
     </div>
@@ -261,8 +292,10 @@
     const dateChoose = document.getElementById("dateChoose").value;
     const apptFrom = document.getElementById("apptFrom").value;
     const apptTo = document.getElementById("apptTo").value;
+    const equipment = document.getElementById("equipment").value;
+    const quantity = document.getElementById("QtyInput").value;
 
-    if (!court || !dateChoose || !apptFrom || !apptTo) {
+    if (!court || !dateChoose || !apptFrom || !apptTo || !equipment || !quantity) {
       alert("Please fill in all the information before continuing.");
       return;
     }
@@ -293,9 +326,15 @@
       return;
     }
 
-    window.location.href = "bookingSpaceFillinfoCourt.html";
+    if (quantity < 1 || quantity > 5) {
+      alert("Quantity must be between 1 and 5.");
+      return;
+    }
+
+    window.location.href = "bookingSpaceFillinfoEquipment.html";
   }
 </script>
-</script>
+
+
 </body>
 </html>
