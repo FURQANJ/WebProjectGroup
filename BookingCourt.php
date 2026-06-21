@@ -1,3 +1,48 @@
+<?php
+session_start();
+include "db.php";
+
+
+$current_guest = $_SESSION['guest_id'] ?? null;
+
+if (isset($_POST['submit'])) {
+    if (!$current_guest) {
+        echo "<script>alert('Sila log masuk terlebih dahulu sebelum membuat tempahan!'); window.location.href='index.php';</script>";
+        exit();
+    }
+
+
+    $data_fields = [
+        $_POST['fullName'],
+        $_POST['phoneNumber'],
+        $_POST['email'],
+        $_POST['reason'],
+        $_POST['court'],
+        $_POST['date'],
+        $_POST['timeFrom'],
+        $_POST['timeTo'],
+        $_POST['equipment'],
+        $_POST['quantity']
+    ];
+
+    $sanitized_fields = array_map(function($field) use ($conn) {
+        return mysqli_real_escape_string($conn, trim($field));
+    }, $data_fields);
+    
+    $booking_details_payload = implode("\t", $sanitized_fields);
+    $default_status = "Pending";
+
+    $stmt = $conn->prepare("INSERT INTO booking (booking_status, booking_details, guest_id) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $default_status, $booking_details_payload, $current_guest);
+    
+    if ($stmt->execute()) {
+        echo "<script>alert('Tempahan berjaya dihantar!'); window.location.href='Approval.php';</script>";
+    } else {
+        echo "<script>alert('Gagal menyimpan tempahan ke dalam pangkalan data.');</script>";
+    }
+    $stmt->close();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -175,28 +220,6 @@
 </head>
 
 <body>
-  <?php
-  if (isset($_POST['submit'])) {
-    $data = array(
-      $_POST['fullName'],
-      $_POST['phoneNumber'],
-      $_POST['email'],
-      $_POST['reason'],
-      $_POST['court'],
-      $_POST['date'],
-      $_POST['timeFrom'],
-      $_POST['timeTo'],
-    );
-
-    $fp = fopen("details.txt", "a") or die("Couldn't open file for writing !!");
-
-    @fwrite($fp, "\n");
-    foreach ($data as $v) {
-      @fwrite($fp, "$v\t");
-    }
-    @fclose($fp);
-  }
-  ?>
   <header>
     <div class="logo">
       <img src="UTeM Clear.png" alt="UTeM Logo">
@@ -206,13 +229,12 @@
       <ul>
         <li><a href="MainPage.html">BOOKING SPACE</a></li>
         <li><a href="Approval.php">APPROVAL/STATUS</a></li>
-        <li style="margin-top: 30px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
+        <li style="margin-top: 500px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
-    <form method="POST" action="AdminBookingLog.php">
     <div id="formSection">
       <div class="form-title">Booking Space</div>
 
@@ -252,14 +274,14 @@
             <label for="court">Court</label>
             <select id="court" name="court">
               <option value="" disabled selected>Choose Court</option>
-              <option value="Tennis1">Tennis Court (1)</option>
-              <option value="Tennis2">Tennis Court (2)</option>
-              <option value="Badminton1">Badminton Court (1)</option>
-              <option value="Badminton2">Badminton Court (2)</option>
-              <option value="Basketball1">Basketball Court (1)</option>
-              <option value="Basketball2">Basketball Court (2)</option>
-              <option value="Futsal1">Futsal Court (1)</option>
-              <option value="Futsal2">Futsal Court (2)</option>
+              <option value="Tennis (1)">Tennis Court (1)</option>
+              <option value="Tennis (2)">Tennis Court (2)</option>
+              <option value="Badminton (1)">Badminton Court (1)</option>
+              <option value="Badminton (2)">Badminton Court (2)</option>
+              <option value="Basketball (1)">Basketball Court (1)</option>
+              <option value="Basketball (2)">Basketball Court (2)</option>
+              <option value="Futsal (1)">Futsal Court (1)</option>
+              <option value="Futsal (2)">Futsal Court (2)</option>
               <option value="Football">Football Field</option>
               <option value="Rugby">Rugby Field</option>
             </select>
@@ -289,7 +311,6 @@
 
       </form>
     </div>
-</form>
   </main>
 
   <script>
@@ -311,7 +332,6 @@
         return false;
       }
 
-
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const selectedDate = new Date(dateChoose);
@@ -322,7 +342,6 @@
         return false;
       }
 
-
       const startTime = new Date(`${dateChoose}T${apptFrom}`);
       const endTime = new Date(`${dateChoose}T${apptTo}`);
 
@@ -331,21 +350,12 @@
         return false;
       }
 
-
       const differenceInHours = (endTime - startTime) / (1000 * 60 * 60);
       if (differenceInHours > 3) {
         alert("Masa tempahan tidak boleh melebihi 3 jam.");
         return false;
       }
-
-
-      if (quantity < 1 || quantity > 5) {
-        alert("Kuantiti peralatan mestilah antara 1 hingga 5 buah.");
-        return false;
-      }
     }
   </script>
-
 </body>
-
 </html>

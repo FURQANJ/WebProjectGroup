@@ -90,10 +90,11 @@ ob_end_flush();
         <button type="submit" name="role" value="student" class="student-btn">Login For Student</button>
         <button type="submit" name="role" value="admin" class="admin-btn">Login For Admin</button>
       </form>
-      <div class="links">
-        <a href="#">Forgot Password</a>
-        <a href="#">New Member Registration</a>
-      </div>
+     <div class="links">
+  <a href="forgot_password.php">Forgot Password</a>
+  <a href="new_member.php">New Member Registration</a>
+</div>
+
     </div>
   </main>
 
