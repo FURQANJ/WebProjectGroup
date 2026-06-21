@@ -229,7 +229,7 @@ if (isset($_POST['submit'])) {
       <ul>
         <li><a href="MainPage.html">BOOKING SPACE</a></li>
         <li><a href="Approval.php">APPROVAL/STATUS</a></li>
-        <li style="margin-top: 30px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
+        <li style="margin-top: 500px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
       </ul>
     </nav>
   </header>

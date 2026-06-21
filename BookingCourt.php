@@ -90,7 +90,7 @@
 
     .form-title {
       background: #d9d9d9;
-      padding: 12px 28px;
+      padding: 15px 28px;
       font-size: 18px;
       font-weight: bold;
     }
@@ -146,11 +146,6 @@
       background: #fff;
     }
 
-    .section-divider {
-      border-top: 1px solid #eee;
-      margin: 25px 0 20px 0;
-    }
-
     .button-row {
       margin-top: 25px;
       display: flex;
@@ -197,6 +192,7 @@
     @fclose($fp);
   }
   ?>
+  
   <header>
     <div class="logo">
       <img src="UTeM Clear.png" alt="UTeM Logo">
@@ -206,17 +202,16 @@
       <ul>
         <li><a href="MainPage.html">BOOKING SPACE</a></li>
         <li><a href="Approval.php">APPROVAL/STATUS</a></li>
-        <li style="margin-top: 30px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
+        <li style="margin-top: 500px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
-    <form method="POST" action="AdminBookingLog.php">
     <div id="formSection">
       <div class="form-title">Booking Space</div>
 
-      <form action="" method="post" onsubmit="return validateForm();">
+      <form action="AdminBookingLog.php" method="POST" onsubmit="return validateForm();">
 
         <div class="form-group">
           <label for="fullName">Full Name</label>
@@ -289,7 +284,6 @@
 
       </form>
     </div>
-</form>
   </main>
 
   <script>
@@ -298,19 +292,17 @@
       const dateChoose = document.getElementById("dateChoose").value;
       const apptFrom = document.getElementById("apptFrom").value;
       const apptTo = document.getElementById("apptTo").value;
-      const equipment = document.getElementById("equipment").value;
-      const quantity = document.getElementById("QtyInput").value;
 
       const fullName = document.getElementById("fullName").value.trim();
       const phoneNumber = document.getElementById("phoneNumber").value.trim();
       const email = document.getElementById("email").value.trim();
       const reason = document.getElementById("reason").value.trim();
 
-      if (!court || !dateChoose || !apptFrom || !apptTo || !equipment || !quantity || !fullName || !phoneNumber || !email || !reason) {
+      // Diubah: Membuang pengesahan equipment & quantity kerana tiada dalam HTML form anda
+      if (!court || !dateChoose || !apptFrom || !apptTo || !fullName || !phoneNumber || !email || !reason) {
         alert("Sila isi semua maklumat tempahan dan peribadi sebelum menghantar.");
         return false;
       }
-
 
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -322,7 +314,6 @@
         return false;
       }
 
-
       const startTime = new Date(`${dateChoose}T${apptFrom}`);
       const endTime = new Date(`${dateChoose}T${apptTo}`);
 
@@ -331,21 +322,13 @@
         return false;
       }
 
-
       const differenceInHours = (endTime - startTime) / (1000 * 60 * 60);
       if (differenceInHours > 3) {
         alert("Masa tempahan tidak boleh melebihi 3 jam.");
-        return false;
-      }
-
-
-      if (quantity < 1 || quantity > 5) {
-        alert("Kuantiti peralatan mestilah antara 1 hingga 5 buah.");
         return false;
       }
     }
   </script>
 
 </body>
-
 </html>
