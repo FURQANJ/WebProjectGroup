@@ -1,3 +1,48 @@
+<?php
+session_start();
+include "db.php";
+
+
+$current_guest = $_SESSION['guest_id'] ?? null;
+
+if (isset($_POST['submit'])) {
+    if (!$current_guest) {
+        echo "<script>alert('Sila log masuk terlebih dahulu sebelum membuat tempahan!'); window.location.href='index.php';</script>";
+        exit();
+    }
+
+
+    $data_fields = [
+        $_POST['fullName'],
+        $_POST['phoneNumber'],
+        $_POST['email'],
+        $_POST['reason'],
+        $_POST['court'],
+        $_POST['date'],
+        $_POST['timeFrom'],
+        $_POST['timeTo'],
+        $_POST['equipment'],
+        $_POST['quantity']
+    ];
+
+    $sanitized_fields = array_map(function($field) use ($conn) {
+        return mysqli_real_escape_string($conn, trim($field));
+    }, $data_fields);
+    
+    $booking_details_payload = implode("\t", $sanitized_fields);
+    $default_status = "Pending";
+
+    $stmt = $conn->prepare("INSERT INTO booking (booking_status, booking_details, guest_id) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $default_status, $booking_details_payload, $current_guest);
+    
+    if ($stmt->execute()) {
+        echo "<script>alert('Tempahan berjaya dihantar!'); window.location.href='Approval.php';</script>";
+    } else {
+        echo "<script>alert('Gagal menyimpan tempahan ke dalam pangkalan data.');</script>";
+    }
+    $stmt->close();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -90,7 +135,7 @@
 
     .form-title {
       background: #d9d9d9;
-      padding: 15px 28px;
+      padding: 12px 28px;
       font-size: 18px;
       font-weight: bold;
     }
@@ -146,6 +191,11 @@
       background: #fff;
     }
 
+    .section-divider {
+      border-top: 1px solid #eee;
+      margin: 25px 0 20px 0;
+    }
+
     .button-row {
       margin-top: 25px;
       display: flex;
@@ -170,29 +220,6 @@
 </head>
 
 <body>
-  <?php
-  if (isset($_POST['submit'])) {
-    $data = array(
-      $_POST['fullName'],
-      $_POST['phoneNumber'],
-      $_POST['email'],
-      $_POST['reason'],
-      $_POST['court'],
-      $_POST['date'],
-      $_POST['timeFrom'],
-      $_POST['timeTo'],
-    );
-
-    $fp = fopen("details.txt", "a") or die("Couldn't open file for writing !!");
-
-    @fwrite($fp, "\n");
-    foreach ($data as $v) {
-      @fwrite($fp, "$v\t");
-    }
-    @fclose($fp);
-  }
-  ?>
-  
   <header>
     <div class="logo">
       <img src="UTeM Clear.png" alt="UTeM Logo">
@@ -211,7 +238,7 @@
     <div id="formSection">
       <div class="form-title">Booking Space</div>
 
-      <form action="AdminBookingLog.php" method="POST" onsubmit="return validateForm();">
+      <form action="" method="post" onsubmit="return validateForm();">
 
         <div class="form-group">
           <label for="fullName">Full Name</label>
@@ -247,14 +274,14 @@
             <label for="court">Court</label>
             <select id="court" name="court">
               <option value="" disabled selected>Choose Court</option>
-              <option value="Tennis1">Tennis Court (1)</option>
-              <option value="Tennis2">Tennis Court (2)</option>
-              <option value="Badminton1">Badminton Court (1)</option>
-              <option value="Badminton2">Badminton Court (2)</option>
-              <option value="Basketball1">Basketball Court (1)</option>
-              <option value="Basketball2">Basketball Court (2)</option>
-              <option value="Futsal1">Futsal Court (1)</option>
-              <option value="Futsal2">Futsal Court (2)</option>
+              <option value="Tennis (1)">Tennis Court (1)</option>
+              <option value="Tennis (2)">Tennis Court (2)</option>
+              <option value="Badminton (1)">Badminton Court (1)</option>
+              <option value="Badminton (2)">Badminton Court (2)</option>
+              <option value="Basketball (1)">Basketball Court (1)</option>
+              <option value="Basketball (2)">Basketball Court (2)</option>
+              <option value="Futsal (1)">Futsal Court (1)</option>
+              <option value="Futsal (2)">Futsal Court (2)</option>
               <option value="Football">Football Field</option>
               <option value="Rugby">Rugby Field</option>
             </select>
@@ -292,14 +319,15 @@
       const dateChoose = document.getElementById("dateChoose").value;
       const apptFrom = document.getElementById("apptFrom").value;
       const apptTo = document.getElementById("apptTo").value;
+      const equipment = document.getElementById("equipment").value;
+      const quantity = document.getElementById("QtyInput").value;
 
       const fullName = document.getElementById("fullName").value.trim();
       const phoneNumber = document.getElementById("phoneNumber").value.trim();
       const email = document.getElementById("email").value.trim();
       const reason = document.getElementById("reason").value.trim();
 
-      // Diubah: Membuang pengesahan equipment & quantity kerana tiada dalam HTML form anda
-      if (!court || !dateChoose || !apptFrom || !apptTo || !fullName || !phoneNumber || !email || !reason) {
+      if (!court || !dateChoose || !apptFrom || !apptTo || !equipment || !quantity || !fullName || !phoneNumber || !email || !reason) {
         alert("Sila isi semua maklumat tempahan dan peribadi sebelum menghantar.");
         return false;
       }
@@ -329,6 +357,5 @@
       }
     }
   </script>
-
 </body>
 </html>
