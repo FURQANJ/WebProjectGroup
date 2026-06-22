@@ -100,11 +100,6 @@ $result = $conn->query($sql);
   <div class="logo">
     <img src="UTeM Clear.png" alt="UTeM Logo">
   </div>
-
-  <nav>
-    <a href="adminBookingRequests.php">BOOKING REQUESTS</a>
-    <a href="index.php" style="color:#c62828;">LOGOUT</a>
-  </nav>
 </header>
 
 <main>

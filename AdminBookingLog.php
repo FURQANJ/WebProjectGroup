@@ -22,6 +22,16 @@ $courts = array_unique($courts);
 ?>
 
 <style>
+    body 
+    {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url('Main Background.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      min-height: 100vh;
+    }
+    
     .sidebar {
         width: 250px;
         min-height: 100vh;
@@ -136,7 +146,7 @@ $courts = array_unique($courts);
     .filter-group label {
         font-size: 16px;
         margin-bottom: 8px;
-        font-weight: 500;
+        font-weight: 1000;
     }
 
     .filter-group select,
