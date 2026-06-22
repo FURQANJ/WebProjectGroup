@@ -17,9 +17,13 @@ if ($status === "Approved") {
         WHERE booking_id = ?
     ");
 
-    $stmt->bind_param("i", $booking_id);
-    $stmt->execute();
-    $stmt->close();
+    $booking_id = (int) $_POST['booking_id'];
+
+$sql = "UPDATE booking 
+        SET booking_status = 'Approved' 
+        WHERE booking_id = $booking_id";
+
+$conn->query($sql);
 
     header("Location: bookingActionResult.php?status=Approved");
     exit();
@@ -34,9 +38,15 @@ if ($status === "Approved") {
         WHERE booking_id = ?
     ");
 
-    $stmt->bind_param("si", $rejection_reason, $booking_id);
-    $stmt->execute();
-    $stmt->close();
+   $booking_id = (int) $_POST['booking_id'];
+$rejection_reason = mysqli_real_escape_string($conn, $_POST['rejection_reason']);
+
+$sql = "UPDATE booking
+        SET booking_status = 'Rejected',
+            rejection_reason = '$rejection_reason'
+        WHERE booking_id = $booking_id";
+
+$conn->query($sql);
 
     header("Location: bookingActionResult.php?status=Rejected");
     exit();
