@@ -83,7 +83,6 @@ ob_end_flush();
       <img src="UTeM Clear.png" alt="UTeM Logo" class="logo">
       <nav>
         <button type="button" onclick="openPopup('Location', 'Pusat Sukan UTeM.')">Location</button>
-        <button type="button" onclick="openCategoriesPopup()">Categories</button>
         <button type="button" onclick="openPopup('Help', 'No Tel Technician: +60-1140225591')">Help</button>
       </nav>
     </div>
@@ -115,10 +114,10 @@ ob_end_flush();
 
   <footer>
     <div class="notice">
-      <p><strong>Peringatan:</strong></p>
-      <p>Pengguna perlulah bertanggungjawab atas barang tersebut.</p>
-      <p>Pengguna perlu menghantar barang 3 minit sebelum masa tamat dalam keadaan baik.</p>
-      <p>Penalti akan dikenakan atas individu yang tidak dapat mematuhi peraturan tersebut.</p>
+      <p><strong>REMINDER !!</strong></p>
+      <p>Users Must Be Responsible For The Item.</p>
+      <p>Users Must Return The Item In Good Condition 3 Minutes Before The Time Expires.</p>
+      <p>Penalties Will Be Imposed On Individuals Who Fails To Comply With These Rules.</p>
     </div>
     <div class="social">
       <a href="https://www.utem.edu.my/en/">🌐</a>

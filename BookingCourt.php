@@ -236,6 +236,7 @@ if (isset($_POST['submit'])) {
 
   <main>
     <div id="formSection">
+
       <div class="form-title">Booking Space</div>
 
       <form action="" method="post" onsubmit="return validateForm();">
