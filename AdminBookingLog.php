@@ -3,7 +3,6 @@ include "db.php";
 
 $courtFilter = $_POST['court'] ?? '';
 $dateFilter = $_POST['date'] ?? '';
-
 $sql = "SELECT * FROM booking";
 $result = mysqli_query($conn, $sql);
 
@@ -170,36 +169,33 @@ $courts = array_unique($courts);
 
         <main>
             <div class="details-header">
-                <a href="adminhome.html" class="back-btn"><img src="backbtn.jpeg" name="backbtn"></a>
+                <a href="adminhome.html"><img src="backbtn.jpeg" class="back-btn"></a>
                 <h2>Booking Log</h2>
             </div>
 
             <div class="details-body">
                 <form method="POST">
-                <div class="filter-container">
+                    <div class="filter-container">
 
-                    <div class="filter-group">
-                        <label>Court</label>
-                        <select name="court">
-                            <option value="">Choose Court</option>
+                        <div class="filter-group">
+                            <label>Court</label>
+<select name="court" onchange="this.form.submit()">                                <option value="">Choose Court</option>
 
-                            <?php foreach ($courts as $court) { ?>
-                                <option value="<?php echo $court; ?>"
-<?php if($courtFilter == $court) echo "selected"; ?>>
-                                    <?php echo $court; ?>
-                                </option>
-                            <?php } ?>
-                        </select>
+                                <?php foreach ($courts as $courtOption) { ?>
+    <option value="<?php echo $courtOption; ?>"
+    <?php if($courtFilter == $courtOption) echo "selected"; ?>>
+        <?php echo $courtOption; ?>
+    </option>
+<?php } ?>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Date</label>
+<input type="date" name="date" value="<?php echo $dateFilter; ?>" onchange="this.form.submit()">                        </div>
+
                     </div>
-
-                    <div class="filter-group">
-                        <label>Date</label>
-<input type="date" name="date" value="<?php echo $dateFilter; ?>">                    </div>
-
-                </div>
-                <button type="submit">Search</button>
-
-</form>
+                </form>
 
                 <table class="booking-table">
                     <tr>
@@ -220,8 +216,6 @@ $courts = array_unique($courts);
                         $phone = $details[1] ?? '';
                         $court = $details[4] ?? '';
                         $date = $details[5] ?? '';
-                        $timeFrom = $details[6] ?? '';
-                        $timeTo = $details[7] ?? '';
                         if($courtFilter != '' && $court != $courtFilter){
     continue;
 }
@@ -229,6 +223,9 @@ $courts = array_unique($courts);
 if($dateFilter != '' && $date != $dateFilter){
     continue;
 }
+                        $timeFrom = $details[6] ?? '';
+                        $timeTo = $details[7] ?? '';
+                        
                     ?>
 
                         <tr>
