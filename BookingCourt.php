@@ -1,16 +1,15 @@
 <?php
 session_start();
 include "db.php";
-
-
 $current_guest = $_SESSION['guest_id'] ?? null;
 
-if (isset($_POST['submit'])) {
-    if (!$current_guest) {
+if (isset($_POST['submit'])) 
+  {
+    if (!$current_guest) 
+      {
         echo "<script>alert('Sila log masuk terlebih dahulu sebelum membuat tempahan!'); window.location.href='index.php';</script>";
         exit();
-    }
-
+      }
 
     $data_fields = [
         $_POST['fullName'],
@@ -25,7 +24,8 @@ if (isset($_POST['submit'])) {
         $_POST['quantity']
     ];
 
-    $sanitized_fields = array_map(function($field) use ($conn) {
+    $sanitized_fields = array_map(function($field) use ($conn) 
+    {
         return mysqli_real_escape_string($conn, trim($field));
     }, $data_fields);
     
@@ -35,14 +35,18 @@ if (isset($_POST['submit'])) {
     $stmt = $conn->prepare("INSERT INTO booking (booking_status, booking_details, guest_id) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $default_status, $booking_details_payload, $current_guest);
     
-    if ($stmt->execute()) {
+    if ($stmt->execute()) 
+      {
         echo "<script>alert('Tempahan berjaya dihantar!'); window.location.href='Approval.php';</script>";
-    } else {
+      } 
+    else 
+      {
         echo "<script>alert('Gagal menyimpan tempahan ke dalam pangkalan data.');</script>";
-    }
+      }
     $stmt->close();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,11 +55,13 @@ if (isset($_POST['submit'])) {
   <title>Booking Space - UTeM</title>
 
   <style>
-    * {
+    * 
+    {
       box-sizing: border-box;
     }
 
-    body {
+    body 
+    {
       margin: 0;
       font-family: Arial, sans-serif;
       color: #000;
@@ -65,7 +71,8 @@ if (isset($_POST['submit'])) {
       display: flex;
     }
 
-    header {
+    header 
+    {
       width: 250px;
       min-height: 100vh;
       background: #d3d3d3;
@@ -75,30 +82,35 @@ if (isset($_POST['submit'])) {
       padding-top: 50px;
     }
 
-    .logo img {
+    .logo img 
+    {
       width: 150px;
       height: auto;
       margin-bottom: 95px;
     }
 
-    nav {
+    nav 
+    {
       width: 100%;
       margin-top: 20px;
     }
 
-    nav ul {
+    nav ul 
+    {
       padding: 0;
       margin: 0;
       width: 100%;
       list-style: none;
     }
 
-    nav ul li {
+    nav ul li 
+    {
       width: 100%;
       margin-bottom: 5px;
     }
 
-    nav ul li a {
+    nav ul li a 
+    {
       display: block;
       padding: 15px 25px;
       text-decoration: none;
@@ -108,14 +120,16 @@ if (isset($_POST['submit'])) {
       transition: all 0.3s ease;
     }
 
-    nav ul li a:hover {
+    nav ul li a:hover 
+    {
       background-color: #c4c4c4;
       color: #000000;
       border-left: 4px solid #000000;
       padding-left: 30px;
     }
 
-    main {
+    main 
+    {
       flex: 1;
       display: flex;
       justify-content: center;
@@ -123,7 +137,8 @@ if (isset($_POST['submit'])) {
       padding: 40px;
     }
 
-    #formSection {
+    #formSection 
+    {
       width: 650px;
       min-height: 550px;
       background: #fff;
@@ -133,42 +148,47 @@ if (isset($_POST['submit'])) {
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
     }
 
-    .form-title {
+    .form-title 
+    {
       background: #d9d9d9;
       padding: 12px 28px;
       font-size: 18px;
       font-weight: bold;
     }
 
-    form {
+    form 
+    {
       padding: 30px 28px 25px;
     }
 
-    .form-group {
+    .form-group 
+    {
       margin-bottom: 18px;
       text-align: left;
     }
 
-    .form-row {
+    .form-row 
+    {
       display: flex;
       gap: 25px;
       margin-bottom: 0;
     }
 
-    .form-row .form-group {
+    .form-row .form-group 
+    {
       flex: 1;
     }
 
-    label {
+    label 
+    {
       display: block;
       margin-bottom: 7px;
       font-size: 13px;
       font-weight: 600;
     }
 
-    input,
-    textarea,
-    select {
+    input,textarea,select 
+    {
       width: 100%;
       border: 1px solid #ddd;
       border-radius: 7px;
@@ -177,26 +197,31 @@ if (isset($_POST['submit'])) {
       font-family: Arial, sans-serif;
     }
 
-    input {
+    input 
+    {
       height: 35px;
     }
 
-    textarea {
+    textarea 
+    {
       height: 90px;
       resize: none;
     }
 
-    select {
+    select 
+    {
       height: 35px;
       background: #fff;
     }
 
-    .section-divider {
+    .section-divider 
+    {
       border-top: 1px solid #eee;
       margin: 25px 0 20px 0;
     }
 
-    .button-row {
+    .button-row 
+    {
       margin-top: 25px;
       display: flex;
       justify-content: flex-end;
@@ -213,7 +238,8 @@ if (isset($_POST['submit'])) {
       font-weight: bold;
     }
 
-    button:hover {
+    button:hover 
+    {
       background: #1f3675;
     }
   </style>
@@ -275,16 +301,16 @@ if (isset($_POST['submit'])) {
             <label for="court">Court</label>
             <select id="court" name="court">
               <option value="" disabled selected>Choose Court</option>
-              <option value="Tennis (1)">Tennis Court (1)</option>
-              <option value="Tennis (2)">Tennis Court (2)</option>
-              <option value="Badminton (1)">Badminton Court (1)</option>
-              <option value="Badminton (2)">Badminton Court (2)</option>
-              <option value="Basketball (1)">Basketball Court (1)</option>
-              <option value="Basketball (2)">Basketball Court (2)</option>
-              <option value="Futsal (1)">Futsal Court (1)</option>
-              <option value="Futsal (2)">Futsal Court (2)</option>
-              <option value="Football">Football Field</option>
-              <option value="Rugby">Rugby Field</option>
+              <option value="Tennis Court (1)">Tennis Court (1)</option>
+              <option value="Tennis Court (2)">Tennis Court (2)</option>
+              <option value="Badminton Court (1)">Badminton Court (1)</option>
+              <option value="Badminton Court (2)">Badminton Court (2)</option>
+              <option value="Basketball Court (1)">Basketball Court (1)</option>
+              <option value="Basketball Court (2)">Basketball Court (2)</option>
+              <option value="Futsal Court (1)">Futsal Court (1)</option>
+              <option value="Futsal Court (2)">Futsal Court (2)</option>
+              <option value="Football Field">Football Field</option>
+              <option value="Rugby Field">Rugby Field</option>
             </select>
           </div>
 
@@ -315,7 +341,8 @@ if (isset($_POST['submit'])) {
   </main>
 
   <script>
-    function validateForm() {
+    function validateForm() 
+    {
       const court = document.getElementById("court").value;
       const dateChoose = document.getElementById("dateChoose").value;
       const apptFrom = document.getElementById("apptFrom").value;
@@ -328,34 +355,38 @@ if (isset($_POST['submit'])) {
       const email = document.getElementById("email").value.trim();
       const reason = document.getElementById("reason").value.trim();
 
-      if (!court || !dateChoose || !apptFrom || !apptTo || !equipment || !quantity || !fullName || !phoneNumber || !email || !reason) {
-        alert("Sila isi semua maklumat tempahan dan peribadi sebelum menghantar.");
-        return false;
-      }
+      if (!court || !dateChoose || !apptFrom || !apptTo || !equipment || !quantity || !fullName || !phoneNumber || !email || !reason) 
+        {
+          alert("Sila isi semua maklumat tempahan dan peribadi sebelum menghantar.");
+          return false;
+        }
 
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const selectedDate = new Date(dateChoose);
       selectedDate.setHours(0, 0, 0, 0);
 
-      if (selectedDate < today) {
-        alert("Anda tidak boleh memilih tarikh yang telah berlalu.");
-        return false;
-      }
+      if (selectedDate < today) 
+        {
+          alert("Anda tidak boleh memilih tarikh yang telah berlalu.");
+          return false;
+        }
 
       const startTime = new Date(`${dateChoose}T${apptFrom}`);
       const endTime = new Date(`${dateChoose}T${apptTo}`);
 
-      if (endTime <= startTime) {
-        alert("Masa tamat mestilah selepas masa mula.");
-        return false;
-      }
+      if (endTime <= startTime) 
+        {
+          alert("Masa tamat mestilah selepas masa mula.");
+          return false;
+        }
 
       const differenceInHours = (endTime - startTime) / (1000 * 60 * 60);
-      if (differenceInHours > 3) {
-        alert("Masa tempahan tidak boleh melebihi 3 jam.");
-        return false;
-      }
+      if (differenceInHours > 3) 
+        {
+          alert("Masa tempahan tidak boleh melebihi 3 jam.");
+          return false;
+        }
     }
   </script>
 </body>
