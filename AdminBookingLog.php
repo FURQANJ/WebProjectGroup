@@ -1,6 +1,9 @@
 <?php
 include "db.php";
 
+$courtFilter = $_POST['court'] ?? '';
+$dateFilter = $_POST['date'] ?? '';
+
 $sql = "SELECT * FROM booking";
 $result = mysqli_query($conn, $sql);
 
@@ -172,6 +175,7 @@ $courts = array_unique($courts);
             </div>
 
             <div class="details-body">
+                <form method="POST">
                 <div class="filter-container">
 
                     <div class="filter-group">
@@ -180,7 +184,8 @@ $courts = array_unique($courts);
                             <option value="">Choose Court</option>
 
                             <?php foreach ($courts as $court) { ?>
-                                <option value="<?php echo $court; ?>">
+                                <option value="<?php echo $court; ?>"
+<?php if($courtFilter == $court) echo "selected"; ?>>
                                     <?php echo $court; ?>
                                 </option>
                             <?php } ?>
@@ -189,10 +194,13 @@ $courts = array_unique($courts);
 
                     <div class="filter-group">
                         <label>Date</label>
-                        <input type="date" name="date">
-                    </div>
+<input type="date" name="date" value="<?php echo $dateFilter; ?>">                    </div>
 
                 </div>
+                <button type="submit">Search</button>
+
+</form>
+
                 <table class="booking-table">
                     <tr>
                         <th>BOOKING ID</th>
@@ -214,6 +222,13 @@ $courts = array_unique($courts);
                         $date = $details[5] ?? '';
                         $timeFrom = $details[6] ?? '';
                         $timeTo = $details[7] ?? '';
+                        if($courtFilter != '' && $court != $courtFilter){
+    continue;
+}
+
+if($dateFilter != '' && $date != $dateFilter){
+    continue;
+}
                     ?>
 
                         <tr>
