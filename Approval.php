@@ -1,3 +1,9 @@
+<?php
+session_start();
+include "db.php";
+
+$current_guest = $_SESSION['guest_id'] ?? null;
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -101,6 +107,7 @@
       border: 1px solid #bdc3c7;
       padding: 12px;
       text-align: center;
+      font-size: 13px;
     }
 
     table th {
@@ -112,16 +119,36 @@
     tr:nth-child(even) {
       background-color: #f9f9f9;
     }
+
+    .status-approved {
+      color: #2e7d32;
+      font-weight: bold;
+    }
+
+    .status-rejected {
+      color: #c62828;
+      font-weight: bold;
+    }
+
+    .status-pending {
+      color: #e67e22;
+      font-weight: bold;
+    }
+
+    .rejection-reason {
+      color: #c62828;
+      font-size: 12px;
+    }
   </style>
 </head>
 
 <body>
 
-
   <header>
     <div class="logo">
       <img src="UTeM Clear.png" alt="Pusat Sukan Logo">
     </div>
+
     <nav>
       <ul>
         <li><a href="MainPage.html">BOOKING SPACE</a></li>
@@ -131,10 +158,10 @@
     </nav>
   </header>
 
-
   <section>
     <div class="container">
       <h2>APPROVAL / STATUS</h2>
+
       <table>
         <thead>
           <tr>
@@ -149,74 +176,84 @@
             <th>Equipment</th>
             <th>Quantity</th>
             <th>Status</th>
+            <th>Rejection Reason</th>
           </tr>
         </thead>
+
         <tbody>
           <?php
-session_start();
-include "db.php"; 
+          if ($current_guest) {
+              $stmt = $conn->prepare("
+                  SELECT booking_id, booking_status, booking_details, guest_id, rejection_reason
+                  FROM booking
+                  WHERE guest_id = ?
+                  ORDER BY booking_id DESC
+              ");
 
+              $stmt->bind_param("s", $current_guest);
+              $stmt->execute();
+              $result = $stmt->get_result();
 
-$current_guest = $_SESSION['guest_id'] ?? null;
+              if ($result && $result->num_rows > 0) {
+                  while ($row = $result->fetch_assoc()) {
+                      $details_string = $row['booking_details'] ?? '';
+                      $val = explode("\t", $details_string);
 
-if ($current_guest) {
-   
-    $sql = "SELECT b.booking_id, b.booking_status, b.booking_details, b.guest_id
-            FROM booking b 
-            WHERE b.guest_id = '$current_guest'
-            ORDER BY b.booking_id DESC";
+                      $name      = htmlspecialchars($val[0] ?? '-');
+                      $phone     = htmlspecialchars($val[1] ?? '-');
+                      $email     = htmlspecialchars($val[2] ?? '-');
+                      $reason    = htmlspecialchars($val[3] ?? '-');
+                      $court     = htmlspecialchars($val[4] ?? '-');
+                      $date      = htmlspecialchars($val[5] ?? '-');
+                      $timeFrom  = htmlspecialchars($val[6] ?? '-');
+                      $timeTo    = htmlspecialchars($val[7] ?? '-');
+                      $equipment = (!isset($val[8]) || trim($val[8]) === '') ? '-' : htmlspecialchars($val[8]);
+                      $quantity  = (!isset($val[9]) || trim($val[9]) === '') ? '-' : htmlspecialchars($val[9]);
 
-    $result = mysqli_query($conn, $sql);
+                      $status = $row['booking_status'] ?? 'Pending';
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-         
-            $details_string = $row['booking_details'] ?? '';
-            $val = explode("\t", $details_string);
+                      if ($status === 'Approved') {
+                          $status_class = 'status-approved';
+                      } elseif ($status === 'Rejected') {
+                          $status_class = 'status-rejected';
+                      } else {
+                          $status_class = 'status-pending';
+                      }
 
-          
-            $name      = htmlspecialchars($val[0] ?? '-');
-            $phone     = htmlspecialchars($val[1] ?? '-');
-            $email     = htmlspecialchars($val[2] ?? '-');
-            $reason    = htmlspecialchars($val[3] ?? '-');
-            $court     = htmlspecialchars($val[4] ?? '-');
-            $date      = htmlspecialchars($val[5] ?? '-');
-            $timeFrom  = htmlspecialchars($val[6] ?? '-');
-            $timeTo    = htmlspecialchars($val[7] ?? '-');
-            $equipment = (!isset($val[8]) || trim($val[8]) === '') ? '-' : htmlspecialchars($val[8]);
-            $quantity  = (!isset($val[9]) || trim($val[9]) === '') ? '-' : htmlspecialchars($val[9]);
+                      if ($status === 'Rejected') {
+                          $rejection_reason = htmlspecialchars($row['rejection_reason'] ?? '-');
 
-     
-            $status = $row['booking_status'] ?? 'Pending';
-            if ($status === 'Approved') {
-                $status_color = '#2e7d32'; 
-            } elseif ($status === 'Rejected') {
-                $status_color = '#c62828';
-            } else {
-                $status_color = '#e67e22'; 
-            }
+                          if ($rejection_reason === '') {
+                              $rejection_reason = '-';
+                          }
+                      } else {
+                          $rejection_reason = '-';
+                      }
 
-            echo "<tr>";
-            echo "<td>" . $name . "</td>";
-            echo "<td>" . $phone . "</td>";
-            echo "<td>" . $email . "</td>";
-            echo "<td>" . $reason . "</td>";
-            echo "<td>" . $court . "</td>";
-            echo "<td>" . $date . "</td>";
-            echo "<td>" . $timeFrom . "</td>";
-            echo "<td>" . $timeTo . "</td>";
-            echo "<td>" . $equipment . "</td>";
-            echo "<td>" . $quantity . "</td>";
-            echo "<td><strong style='color: " . $status_color . ";'>" . htmlspecialchars($status) . "</strong></td>";
-            echo "</tr>";
-        }
-    } else {
-        echo "<tr><td colspan='11'>No database booking records found for your account.</td></tr>";
-    }
-} else {
-    echo "<tr><td colspan='11' style='color: #c62828;'>Please log in to view your reservation status.</td></tr>";
-}
-?>
+                      echo "<tr>";
+                      echo "<td>" . $name . "</td>";
+                      echo "<td>" . $phone . "</td>";
+                      echo "<td>" . $email . "</td>";
+                      echo "<td>" . $reason . "</td>";
+                      echo "<td>" . $court . "</td>";
+                      echo "<td>" . $date . "</td>";
+                      echo "<td>" . $timeFrom . "</td>";
+                      echo "<td>" . $timeTo . "</td>";
+                      echo "<td>" . $equipment . "</td>";
+                      echo "<td>" . $quantity . "</td>";
+                      echo "<td><span class='" . $status_class . "'>" . htmlspecialchars($status) . "</span></td>";
+                      echo "<td><span class='rejection-reason'>" . $rejection_reason . "</span></td>";
+                      echo "</tr>";
+                  }
+              } else {
+                  echo "<tr><td colspan='12'>No database booking records found for your account.</td></tr>";
+              }
+
+              $stmt->close();
+          } else {
+              echo "<tr><td colspan='12' style='color: #c62828;'>Please log in to view your reservation status.</td></tr>";
+          }
+          ?>
         </tbody>
       </table>
     </div>
