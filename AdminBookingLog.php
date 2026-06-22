@@ -67,29 +67,6 @@ $courts = array_unique($courts);
         background: #f5f5f5;
     }
 
-    nav ul {
-        list-style: none;
-        padding: 0;
-        width: 100%;
-    }
-
-    nav ul li {
-        width: 100%;
-    }
-
-    nav ul li a {
-        display: block;
-        padding: 20px 25px;
-        margin: 15px;
-        text-decoration: none;
-        color: black;
-        font-weight: 600;
-    }
-
-    nav ul li a:hover {
-        background: #c4c4c4;
-    }
-
     .logo {
         margin-bottom: 25px;
     }
@@ -179,20 +156,22 @@ $courts = array_unique($courts);
 
                         <div class="filter-group">
                             <label>Court</label>
-<select name="court" onchange="this.form.submit()">                                <option value="">Choose Court</option>
+                            <select name="court" onchange="this.form.submit()">
+                                <option value="">Choose Court</option>
 
                                 <?php foreach ($courts as $courtOption) { ?>
-    <option value="<?php echo $courtOption; ?>"
-    <?php if($courtFilter == $courtOption) echo "selected"; ?>>
-        <?php echo $courtOption; ?>
-    </option>
-<?php } ?>
+                                    <option value="<?php echo $courtOption; ?>"
+                                        <?php if ($courtFilter == $courtOption) echo "selected"; ?>>
+                                        <?php echo $courtOption; ?>
+                                    </option>
+                                <?php } ?>
                             </select>
                         </div>
 
                         <div class="filter-group">
                             <label>Date</label>
-<input type="date" name="date" value="<?php echo $dateFilter; ?>" onchange="this.form.submit()">                        </div>
+                            <input type="date" name="date" value="<?php echo $dateFilter; ?>" onchange="this.form.submit()">
+                        </div>
 
                     </div>
                 </form>
@@ -216,16 +195,16 @@ $courts = array_unique($courts);
                         $phone = $details[1] ?? '';
                         $court = $details[4] ?? '';
                         $date = $details[5] ?? '';
-                        if($courtFilter != '' && $court != $courtFilter){
-    continue;
-}
+                        if ($courtFilter != '' && $court != $courtFilter) {
+                            continue;
+                        }
 
-if($dateFilter != '' && $date != $dateFilter){
-    continue;
-}
+                        if ($dateFilter != '' && $date != $dateFilter) {
+                            continue;
+                        }
                         $timeFrom = $details[6] ?? '';
                         $timeTo = $details[7] ?? '';
-                        
+
                     ?>
 
                         <tr>
