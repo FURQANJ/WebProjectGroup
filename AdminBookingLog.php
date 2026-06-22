@@ -40,7 +40,7 @@ $courts = array_unique($courts);
         display: flex;
         flex-direction: column;
         padding: 40px;
-        padding-top:20px;
+        padding-top: 20px;
     }
 
     .booking-table {
@@ -96,7 +96,7 @@ $courts = array_unique($courts);
         display: flex;
         align-items: center;
         gap: 30px;
-        margin-top:10px;
+        margin-top: 10px;
         margin-bottom: 20px;
     }
 
@@ -107,46 +107,46 @@ $courts = array_unique($courts);
         max-width: none;
     }
 
-    .details-header h2{
-    margin:0px;
-    position:relative;
-    top:8px;
-}
-
-    .back-btn {
-        width:60px;
-        height:60px;
-        border-radius:50%;
+    .details-header h2 {
+        margin: 0px;
+        position: relative;
+        top: 8px;
     }
 
-    .filter-container{
-    display:flex;
-    gap:30px;
-    margin-top:10px;
-    margin-bottom:40px;
-}
+    .back-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+    }
 
-.filter-group{
-    display:flex;
-    flex-direction:column;
-}
+    .filter-container {
+        display: flex;
+        gap: 30px;
+        margin-top: 10px;
+        margin-bottom: 40px;
+    }
 
-.filter-group label{
-    font-size:16px;
-    margin-bottom:8px;
-    font-weight:500;
-}
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+    }
 
-.filter-group select,
-.filter-group input{
-    width:220px;
-    height:45px;
-    border:none;
-    border-radius:8px;
-    padding:0 15px;
-    background:white;
-    font-size:15px;
-}
+    .filter-group label {
+        font-size: 16px;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    .filter-group select,
+    .filter-group input {
+        width: 220px;
+        height: 45px;
+        border: none;
+        border-radius: 8px;
+        padding: 0 15px;
+        background: white;
+        font-size: 15px;
+    }
 </style>
 
 <!DOCTYPE html>
@@ -174,25 +174,25 @@ $courts = array_unique($courts);
             <div class="details-body">
                 <div class="filter-container">
 
-    <div class="filter-group">
-        <label>Court</label>
-        <select name="court">
-            <option value="">Choose Court</option>
+                    <div class="filter-group">
+                        <label>Court</label>
+                        <select name="court">
+                            <option value="">Choose Court</option>
 
-            <?php foreach($courts as $court){ ?>
-                <option value="<?php echo $court; ?>">
-                    <?php echo $court; ?>
-                </option>
-            <?php } ?>
-        </select>
-    </div>
+                            <?php foreach ($courts as $court) { ?>
+                                <option value="<?php echo $court; ?>">
+                                    <?php echo $court; ?>
+                                </option>
+                            <?php } ?>
+                        </select>
+                    </div>
 
-    <div class="filter-group">
-        <label>Date</label>
-        <input type="date" name="date">
-    </div>
+                    <div class="filter-group">
+                        <label>Date</label>
+                        <input type="date" name="date">
+                    </div>
 
-</div>
+                </div>
                 <table class="booking-table">
                     <tr>
                         <th>BOOKING ID</th>
