@@ -1,40 +1,39 @@
 <?php
 session_start();
-include("db.php"); // sambungan database
-
+include("db.php");
+ 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
-
-    // Check email dalam DB
-    $sql = "SELECT * FROM users WHERE email='$email' LIMIT 1";
+ 
+    $sql = "SELECT * FROM guest WHERE email='$email' AND is_verified=1 LIMIT 1";
     $result = mysqli_query($conn, $sql);
-
+ 
     if ($result && mysqli_num_rows($result) > 0) {
-        // Generate OTP
         $otp = rand(100000, 999999);
         $expiry = date("Y-m-d H:i:s", strtotime("+10 minutes"));
-
-        // Simpan OTP dalam DB
-        $update = "UPDATE users SET otp_code='$otp', otp_expiry='$expiry' WHERE email='$email'";
+ 
+        $update = "UPDATE guest SET otp_code='$otp', otp_expiry='$expiry' WHERE email='$email'";
         mysqli_query($conn, $update);
-
-        // Hantar OTP ke email
-        $subject = "Password Reset OTP";
-        $message = "Your OTP code is: $otp. It will expire in 10 minutes.";
+ 
+        // Menggunakan fungsi mail() asal untuk hantar ke Papercut
+        $subject = "Password Reset OTP - Pusat Sukan UTeM";
+        $message = "Salam!\n\nKod OTP untuk set semula kata laluan anda ialah: $otp\nKod ini akan tamat dalam masa 10 minit.\n\nTerima kasih,\nPusat Sukan UTeM";
         $headers = "From: no-reply@pusatsukanutem.com";
-
+ 
         if (mail($email, $subject, $message, $headers)) {
-            $_SESSION['reset_email'] = $email;
-            header("Location: otp_verify.php");
+            $_SESSION['otp_email'] = $email;
+            $_SESSION['otp_purpose'] = 'forgot_password';
+            echo "<script>alert('OTP telah dihantar! Sila semak emel anda.'); window.location.href='otp.php';</script>";
             exit();
         } else {
-            echo "<script>alert('Failed to send OTP email.');</script>";
+            echo "<script>alert('Gagal menghantar emel OTP. Pastikan php.ini XAMPP dah di-config ke Papercut.');</script>";
         }
     } else {
-        echo "<script>alert('Email tidak dijumpai dalam sistem!');</script>";
+        echo "<script>alert('Email tidak dijumpai atau akaun belum disahkan!');</script>";
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <nav>
         <button type="button" onclick="openPopup('Location', 'Pusat Sukan UTeM.')">Location</button>
         <button type="button" onclick="openCategoriesPopup()">Categories</button>
-        <button type="button" onclick="openPopup('Help', 'Add your help content here.')">Help</button>
+        <button type="button" onclick="openPopup('Help', 'No Tel Technician: +60-1140225591')">Help</button>
       </nav>
     </div>
   </header>
@@ -61,9 +60,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="email" name="email" placeholder="Enter your registered Gmail" required>
         <button type="submit" class="student-btn">Send OTP</button>
       </form>
-        <div class="links">
-      <a href="index.php" class="nav-button">⬅ Back to Login</a>
-    </div>
+      <div class="links">
+        <a href="index.php" class="nav-button">⬅ Back to Login</a>
+      </div>
     </div>
   </main>
 

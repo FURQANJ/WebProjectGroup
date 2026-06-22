@@ -1,17 +1,15 @@
-* 
-{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body 
-{
+body {
   font-family: Arial, sans-serif;
   background: url("Log In Background 2.png") no-repeat center center fixed;
   background-size: cover;
   color: #000;
-    display: flex;
+  display: flex;
   flex-direction: column;
 }
 
@@ -56,7 +54,7 @@ nav button:hover,
   background: url("Log In Background 1.png") no-repeat center center;
   background-size: cover;
   border-radius: 25px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
   text-align: center;
 }
 .login-box h2 {
@@ -70,7 +68,8 @@ nav button:hover,
   border: 1px solid #ccc;
   border-radius: 10px;
 }
-.student-btn, .admin-btn {
+.student-btn,
+.admin-btn {
   width: 80%;
   padding: 10px;
   margin: 10px 0;
@@ -81,7 +80,8 @@ nav button:hover,
   cursor: pointer;
   font-weight: bold;
 }
-.student-btn:hover, .admin-btn:hover {
+.student-btn:hover,
+.admin-btn:hover {
   background-color: #004b93;
 }
 .links {
@@ -89,7 +89,7 @@ nav button:hover,
 }
 .links a {
   margin: 0 10px;
-  color: #002b7f;
+  color: white;
   text-decoration: none;
 }
 .links a:hover {
@@ -97,13 +97,16 @@ nav button:hover,
 }
 
 footer {
-  background-color: #004b93;
-  color: white;
+  background-color: #004b93; /* warna biru gelap */
+  color: white; /* teks putih */
   padding: 20px 24px;
   text-align: center;
-  position: sticky;
+  position: fixed; /* sentiasa melekat di bawah */
   bottom: 0;
-  width: 100%;
+  left: 0;
+  width: 100%; /* penuh lebar */
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3); /* shadow atas */
+  z-index: 100;
 }
 .notice {
   margin-bottom: 10px;
@@ -119,7 +122,6 @@ footer {
 }
 
 .content-page {
- 
   flex: 1;
 }
 
@@ -129,7 +131,7 @@ footer {
   border-radius: 20px;
   padding: 30px;
   text-align: center;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 .content-box h1 {
@@ -158,7 +160,7 @@ footer {
   padding: 30px;
   position: relative;
   text-align: center;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .popup-box h2 {

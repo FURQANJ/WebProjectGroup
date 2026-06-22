@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("db.php"); // sambungan database
+include("db.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $matrik = mysqli_real_escape_string($conn, $_POST['matrik']);
@@ -11,30 +11,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($password !== $confirmPassword) {
         echo "<script>alert('Password tidak sama!');</script>";
     } else {
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        // Generate OTP
-        $otp = rand(100000, 999999);
-        $expiry = date("Y-m-d H:i:s", strtotime("+10 minutes"));
-
-        $sql = "INSERT INTO users (matrik, email, password, otp_code, otp_expiry) 
-                VALUES ('$matrik', '$email', '$hashedPassword', '$otp', '$expiry')";
-
-        if (mysqli_query($conn, $sql)) {
-            $subject = "Your OTP Code";
-            $message = "Here is your OTP code: $otp. It will expire in 10 minutes.";
-            $headers = "From: no-reply@pusatsukanutem.com";
-
-            if (mail($email, $subject, $message, $headers)) {
-                echo "<script>alert('Registration successful! Check your email for OTP.');</script>";
-                $_SESSION['email'] = $email;
-                header("Location: otp_verify.php");
-                exit();
-            } else {
-                echo "<script>alert('Failed to send OTP email.');</script>";
-            }
+        // Semak jika matrik/emel dah berdaftar & verified
+        $checkSql = "SELECT * FROM guest WHERE (matrik='$matrik' OR email='$email') AND is_verified=1 LIMIT 1";
+        $checkResult = mysqli_query($conn, $checkSql);
+        
+        if ($checkResult && mysqli_num_rows($checkResult) > 0) {
+            echo "<script>alert('No. Matrik atau emel sudah didaftarkan!');</script>";
         } else {
-            echo "<script>alert('Error: Could not register user.');</script>";
+            // Generate OTP
+            $otp = rand(100000, 999999);
+            $expiry = date("Y-m-d H:i:s", strtotime("+10 minutes"));
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            // Buang rekod lama yang belum verify
+            mysqli_query($conn, "DELETE FROM guest WHERE email='$email' AND is_verified=0");
+
+            // Masukkan rekod pendaftaran baru
+            $sql = "INSERT INTO guest (matrik, email, password, otp_code, otp_expiry, is_verified)
+                    VALUES ('$matrik', '$email', '$hashedPassword', '$otp', '$expiry', 0)";
+
+            if (mysqli_query($conn, $sql)) {
+                
+                // Menggunakan fungsi mail() asal untuk hantar ke Papercut
+                $subject = "Your OTP Code - Pusat Sukan UTeM";
+                $message = "Salam, $matrik!\n\nKod OTP anda ialah: $otp\nKod ini akan tamat dalam masa 10 minit.\n\nTerima kasih,\nPusat Sukan UTeM";
+                $headers = "From: no-reply@pusatsukanutem.com";
+
+                if (mail($email, $subject, $message, $headers)) {
+                    $_SESSION['otp_email'] = $email;
+                    $_SESSION['otp_purpose'] = 'register';
+                    echo "<script>alert('Pendaftaran berjaya! Sila semak emel untuk kod OTP.'); window.location.href='otp.php';</script>";
+                    exit();
+                } else {
+                    echo "<script>alert('Gagal menghantar emel fungsi mail(). Pastikan php.ini XAMPP dah di-config ke Papercut.');</script>";
+                }
+
+            } else {
+                echo "<script>alert('Ralat database: " . mysqli_real_escape_string($conn, mysqli_error($conn)) . "');</script>";
+            }
         }
     }
 }
@@ -53,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <nav>
         <button type="button" onclick="openPopup('Location', 'Pusat Sukan UTeM.')">Location</button>
         <button type="button" onclick="openCategoriesPopup()">Categories</button>
-        <button type="button" onclick="openPopup('Help', 'Add your help content here.')">Help</button>
+        <button type="button" onclick="openPopup('Help', 'No Tel Technician: +60-1140225591')">Help</button>
       </nav>
     </div>
   </header>
@@ -67,9 +81,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="password" name="password" placeholder="Password" required>
         <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
         <button type="submit" class="student-btn">Register</button>
-          <div class="links">
-      <a href="index.php" class="nav-button">⬅ Back to Login</a>
-    </div>
+        <div class="links">
+          <a href="index.php" class="nav-button">⬅ Back to Login</a>
+        </div>
       </form>
     </div>
   </main>
