@@ -82,8 +82,8 @@ ob_end_flush();
     <div class="header-container">
       <img src="UTeM Clear.png" alt="UTeM Logo" class="logo">
       <nav>
-        <button type="button" onclick="openPopup('Location', 'Pusat Sukan UTeM.')">Location</button>
-        <button type="button" onclick="openCategoriesPopup()">Categories</button>
+        <button type="button" onclick="window.open('https://www.google.com/maps?q=Stadium+UTeM,+76100+Durian+Tunggal,+Melaka', '_blank')">Location</button>
+        <button type="button" onclick="openCategoriesPopup('Option 1.png','Option 2.png')">Categories</button>
         <button type="button" onclick="openPopup('Help', 'No Tel Technician: +60-1140225591')">Help</button>
       </nav>
     </div>
