@@ -168,14 +168,6 @@ include "db.php";
 
     <header>
         <div class="logo"><img src="UTeM Clear.png" alt="UTeM Logo"></div>
-        <nav>
-            <ul>
-                <li><a href="AdminBookingLog.php">BOOKING LOG</a></li>
-                <li><a href="AdminBookingRequest.php">BOOKING REQUESTS</a></li>
-                <li><a href="AdminUpdate.php">COURT/EQUIPMENT UPDATE</a></li>
-                <li style="margin-top: 450px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
-            </ul>
-        </nav>
     </header>
 
     <main>

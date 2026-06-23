@@ -12,7 +12,8 @@ $result = $conn->query($sql);
   <title>Booking Requests</title>
 
   <style>
-    body {
+    body 
+    {
       margin: 0;
       font-family: Arial, sans-serif;
       background: url('Main Background.png') no-repeat center center fixed;
@@ -21,19 +22,22 @@ $result = $conn->query($sql);
       min-height: 100vh;
     }
 
-    header {
+    header 
+    {
       width: 250px;
       background: #d3d3d3;
       padding-top: 50px;
       text-align: center;
     }
 
-    .logo img {
+    .logo img 
+    {
       width: 150px;
       margin-bottom: 80px;
     }
 
-    nav a {
+    nav a 
+    {
       display: block;
       padding: 15px 25px;
       text-decoration: none;
@@ -43,7 +47,8 @@ $result = $conn->query($sql);
       text-align: left;
     }
 
-    nav a:hover {
+    nav a:hover 
+    {
       background: #c4c4c4;
     }
 
@@ -100,11 +105,6 @@ $result = $conn->query($sql);
   <div class="logo">
     <img src="UTeM Clear.png" alt="UTeM Logo">
   </div>
-
-  <nav>
-    <a href="adminBookingRequests.php">BOOKING REQUESTS</a>
-    <a href="index.php" style="color:#c62828;">LOGOUT</a>
-  </nav>
 </header>
 
 <main>

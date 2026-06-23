@@ -1,6 +1,8 @@
 <?php
 include "db.php";
 
+$courtFilter = $_POST['court'] ?? '';
+$dateFilter = $_POST['date'] ?? '';
 $sql = "SELECT * FROM booking";
 $result = mysqli_query($conn, $sql);
 
@@ -20,7 +22,49 @@ $courts = array_unique($courts);
 ?>
 
 <style>
-    .sidebar {
+    body 
+    {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url('Main Background.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    header 
+    {
+      width: 250px;
+      background: #d3d3d3;
+      padding-top: 50px;
+      text-align: center;
+    }
+
+    .logo img 
+    {
+      width: 150px;
+      margin-bottom: 80px;
+    }
+
+    nav a 
+    {
+      display: block;
+      padding: 15px 25px;
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    nav a:hover 
+    {
+      background: #c4c4c4;
+    }
+
+
+    .sidebar 
+    {
         width: 250px;
         min-height: 100vh;
         background: #d3d3d3;
@@ -65,33 +109,6 @@ $courts = array_unique($courts);
         background: #f5f5f5;
     }
 
-    nav ul {
-        list-style: none;
-        padding: 0;
-        width: 100%;
-    }
-
-    nav ul li {
-        width: 100%;
-    }
-
-    nav ul li a {
-        display: block;
-        padding: 20px 25px;
-        margin: 15px;
-        text-decoration: none;
-        color: black;
-        font-weight: 600;
-    }
-
-    nav ul li a:hover {
-        background: #c4c4c4;
-    }
-
-    .logo {
-        margin-bottom: 25px;
-    }
-
     .details-header {
         display: flex;
         align-items: center;
@@ -134,7 +151,7 @@ $courts = array_unique($courts);
     .filter-group label {
         font-size: 16px;
         margin-bottom: 8px;
-        font-weight: 500;
+        font-weight: 1000;
     }
 
     .filter-group select,
@@ -154,45 +171,49 @@ $courts = array_unique($courts);
 
 <head>
     <title>Booking Log</title>
-    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <div class="page">
-        <div class="sidebar">
-            <img src="UTeM Clear.png" class="logo" alt="UTeM Logo">
+    <header>
+        <div class="logo">
+            <img src="UTeM Clear.png" alt="UTeM Logo">
         </div>
+    </header>
 
 
         <main>
             <div class="details-header">
-                <a href="adminhome.html" class="back-btn"><img src="backbtn.jpeg" name="backbtn"></a>
+                <a href="adminhome.html"><img src="BackArrowButton.png" class="back-btn"></a>
                 <h2>Booking Log</h2>
             </div>
 
             <div class="details-body">
-                <div class="filter-container">
+                <form method="POST">
+                    <div class="filter-container">
 
-                    <div class="filter-group">
-                        <label>Court</label>
-                        <select name="court">
-                            <option value="">Choose Court</option>
+                        <div class="filter-group">
+                            <label>Court</label>
+                            <select name="court" onchange="this.form.submit()">
+                                <option value="">Choose Court</option>
 
-                            <?php foreach ($courts as $court) { ?>
-                                <option value="<?php echo $court; ?>">
-                                    <?php echo $court; ?>
-                                </option>
-                            <?php } ?>
-                        </select>
+                                <?php foreach ($courts as $courtOption) { ?>
+                                    <option value="<?php echo $courtOption; ?>"
+                                        <?php if ($courtFilter == $courtOption) echo "selected"; ?>>
+                                        <?php echo $courtOption; ?>
+                                    </option>
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                        <div class="filter-group">
+                            <label>Date</label>
+                            <input type="date" name="date" value="<?php echo $dateFilter; ?>" onchange="this.form.submit()">
+                        </div>
+
                     </div>
+                </form>
 
-                    <div class="filter-group">
-                        <label>Date</label>
-                        <input type="date" name="date">
-                    </div>
-
-                </div>
                 <table class="booking-table">
                     <tr>
                         <th>BOOKING ID</th>
@@ -212,8 +233,16 @@ $courts = array_unique($courts);
                         $phone = $details[1] ?? '';
                         $court = $details[4] ?? '';
                         $date = $details[5] ?? '';
+                        if ($courtFilter != '' && $court != $courtFilter) {
+                            continue;
+                        }
+
+                        if ($dateFilter != '' && $date != $dateFilter) {
+                            continue;
+                        }
                         $timeFrom = $details[6] ?? '';
                         $timeTo = $details[7] ?? '';
+
                     ?>
 
                         <tr>
