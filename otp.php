@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<script>alert('OTP telah tamat tempoh! Sila daftar semula.'); window.location.href='new_member.php';</script>";
         } elseif ($entered_otp == $db_otp) {
             if ($purpose === 'register') {
-                // Berjaya, tukar status is_verified ke 1
+                
                 mysqli_query($conn, "UPDATE guest SET is_verified=1, otp_code=NULL, otp_expiry=NULL WHERE email='$safeEmail'");
                 unset($_SESSION['otp_email'], $_SESSION['otp_purpose']);
                 echo "<script>alert('OTP berjaya disahkan! Akaun anda telah didaftarkan. Sila login.'); window.location.href='index.php';</script>";
@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <img src="UTeM Clear.png" alt="UTeM Logo" class="logo">
       <nav>
         <button type="button" onclick="openPopup('Location', 'Pusat Sukan UTeM.')">Location</button>
-        <button type="button" onclick="openCategoriesPopup()">Categories</button>
+     
         <button type="button" onclick="openPopup('Help', 'No Tel Technician: +60-1140225591')">Help</button>
       </nav>
     </div>

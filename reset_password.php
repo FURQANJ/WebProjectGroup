@@ -2,7 +2,7 @@
 session_start();
 include "db.php";
  
-// Menghalang akses terus jika tidak melalui pengesahan OTP terlebih dahulu
+
 if (!isset($_SESSION['reset_email'])) {
     header("Location: forgot_password.php");
     exit();
@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (strlen($new_password) < 6) {
         echo "<script>alert('Password mestilah sekurang-kurangnya 6 aksara!');</script>";
     } else {
-        // Melakukan hashing untuk password baharu supaya sepadan dengan sistem login terkini
+      
         $hashed = password_hash($new_password, PASSWORD_DEFAULT);
         $safeEmail = mysqli_real_escape_string($conn, $email);
  
@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bind_param("ss", $hashed, $safeEmail);
  
         if ($stmt->execute()) {
-            // Buang session reset setelah berjaya untuk keselamatan
+           
             unset($_SESSION['reset_email']);
             echo "<script>alert('Password berjaya ditukar! Sila login semula.'); window.location.href='index.php';</script>";
             exit();
@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <img src="UTeM Clear.png" alt="UTeM Logo" class="logo">
       <nav>
         <button type="button" onclick="openPopup('Location', 'Pusat Sukan UTeM.')">Location</button>
-        <button type="button" onclick="openCategoriesPopup()">Categories</button>
+
         <button type="button" onclick="openPopup('Help', 'No Tel Technician: +60-1140225591')">Help</button>
       </nav>
     </div>

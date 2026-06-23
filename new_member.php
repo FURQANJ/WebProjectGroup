@@ -11,28 +11,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($password !== $confirmPassword) {
         echo "<script>alert('Password tidak sama!');</script>";
     } else {
-        // Semak jika matrik/emel dah berdaftar & verified
+        
         $checkSql = "SELECT * FROM guest WHERE (matrik='$matrik' OR email='$email') AND is_verified=1 LIMIT 1";
         $checkResult = mysqli_query($conn, $checkSql);
         
         if ($checkResult && mysqli_num_rows($checkResult) > 0) {
             echo "<script>alert('No. Matrik atau emel sudah didaftarkan!');</script>";
         } else {
-            // Generate OTP
+        
             $otp = rand(100000, 999999);
             $expiry = date("Y-m-d H:i:s", strtotime("+10 minutes"));
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-            // Buang rekod lama yang belum verify
+          
             mysqli_query($conn, "DELETE FROM guest WHERE email='$email' AND is_verified=0");
 
-            // Masukkan rekod pendaftaran baru
+          
             $sql = "INSERT INTO guest (matrik, email, password, otp_code, otp_expiry, is_verified)
                     VALUES ('$matrik', '$email', '$hashedPassword', '$otp', '$expiry', 0)";
 
             if (mysqli_query($conn, $sql)) {
                 
-                // Menggunakan fungsi mail() asal untuk hantar ke Papercut
+              
                 $subject = "Your OTP Code - Pusat Sukan UTeM";
                 $message = "Salam, $matrik!\n\nKod OTP anda ialah: $otp\nKod ini akan tamat dalam masa 10 minit.\n\nTerima kasih,\nPusat Sukan UTeM";
                 $headers = "From: no-reply@pusatsukanutem.com";
@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <img src="UTeM Clear.png" alt="UTeM Logo" class="logo">
       <nav>
         <button type="button" onclick="openPopup('Location', 'Pusat Sukan UTeM.')">Location</button>
-        <button type="button" onclick="openCategoriesPopup()">Categories</button>
+
         <button type="button" onclick="openPopup('Help', 'No Tel Technician: +60-1140225591')">Help</button>
       </nav>
     </div>

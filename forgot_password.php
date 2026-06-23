@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $update = "UPDATE guest SET otp_code='$otp', otp_expiry='$expiry' WHERE email='$email'";
         mysqli_query($conn, $update);
  
-        // Menggunakan fungsi mail() asal untuk hantar ke Papercut
+        
         $subject = "Password Reset OTP - Pusat Sukan UTeM";
         $message = "Salam!\n\nKod OTP untuk set semula kata laluan anda ialah: $otp\nKod ini akan tamat dalam masa 10 minit.\n\nTerima kasih,\nPusat Sukan UTeM";
         $headers = "From: no-reply@pusatsukanutem.com";
@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <img src="UTeM Clear.png" alt="UTeM Logo" class="logo">
       <nav>
         <button type="button" onclick="openPopup('Location', 'Pusat Sukan UTeM.')">Location</button>
-        <button type="button" onclick="openCategoriesPopup()">Categories</button>
+
         <button type="button" onclick="openPopup('Help', 'No Tel Technician: +60-1140225591')">Help</button>
       </nav>
     </div>

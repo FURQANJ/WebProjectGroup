@@ -28,21 +28,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
  
     } else if ($role == "student") {
-        // Carian berasaskan No. Matrik
+     
         $sql = "SELECT * FROM guest WHERE matrik = '$userId' AND is_verified = 1 LIMIT 1";
         $result = mysqli_query($conn, $sql);
  
         if ($result && mysqli_num_rows($result) > 0) {
             $userRow = mysqli_fetch_assoc($result);
             
-            // DIBAIKI: Logik semakan password yang lebih dinamik dan selamat
+            
             $passwordMatch = false;
             
-            // 1. Cuba semak menggunakan kaedah Hashed Password dahulu
+         
             if (password_verify($password, $userRow['password'])) {
                 $passwordMatch = true;
             } 
-            // 2. Jika gagal, semak jika ia adalah password teks biasa (akaun lama)
+         
             else if ($userRow['password'] === $password) {
                 $passwordMatch = true;
             }
