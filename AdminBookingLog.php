@@ -95,10 +95,31 @@ $courts = array_unique($courts);
 
         main {
             flex: 1;
+            padding: 60px 40px;
             display: flex;
             flex-direction: column;
-            padding: 40px;
-            padding-top: 20px;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+        }
+
+        .back-btn {
+            display: block;
+            text-align: left;
+            margin-bottom: 15px;
+            transition: transform 0.2s ease;
+            width: max-content;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .back-arrow-img {
+            width: 35px;
+            height: auto;
+            vertical-align: middle;
         }
 
         .booking-table {
@@ -123,31 +144,10 @@ $courts = array_unique($courts);
             background: #f5f5f5;
         }
 
-        .details-header {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
-
         .details-body {
             margin-top: 0px;
             width: 100%;
-            padding: 20px;
             max-width: none;
-        }
-
-        .details-header h2 {
-            margin: 0px;
-            position: relative;
-            top: 8px;
-        }
-
-        .back-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
         }
 
         .filter-container {
@@ -177,6 +177,7 @@ $courts = array_unique($courts);
             padding: 0 15px;
             background: white;
             font-size: 15px;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
@@ -198,10 +199,13 @@ $courts = array_unique($courts);
     </header>
 
     <main>
-        <div class="details-header">
-            <a href="adminhome.html"><img src="BackArrowButton.png" class="back-btn" alt="Back"></a>
-            <h2>Booking Log</h2>
+        <div class="container">
+            <a href="adminhome.html" class="back-btn">
+                <img src="BackArrowButton.png" alt="Back" class="back-arrow-img">
+            </a>
         </div>
+
+        <h2>Booking Log</h2>
 
         <div class="details-body">
             <form method="POST">
@@ -276,19 +280,6 @@ $courts = array_unique($courts);
 
         </div>
     </main>
-
-    <script>
-        function submitRejectForm() {
-            const reason = document.getElementById("rejection_reason").value.trim();
-
-            if (reason === "") {
-                alert("Please state your reason.");
-                return;
-            }
-
-            document.getElementById("rejectForm").submit();
-        }
-    </script>
 
 </body>
 

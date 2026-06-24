@@ -91,21 +91,27 @@ $result = $conn->query($sql);
       margin-bottom: 25px;
     }
 
+    /* Synchronized Table Styling */
     table {
       width: 100%;
       border-collapse: collapse;
       background: white;
     }
 
-    th, td {
-      border: 1px solid #ccc;
-      padding: 12px;
-      font-size: 13px;
+    table th {
+      background: #d9d9d9;
+      padding: 15px;
+      border: 1px solid #cfcfcf;
       text-align: left;
     }
 
-    th {
-      background: #f0f0f0;
+    table td {
+      padding: 15px;
+      border: 1px solid #cfcfcf;
+    }
+
+    table tr:hover {
+      background: #f5f5f5;
     }
 
     .back-btn {
@@ -143,7 +149,7 @@ $result = $conn->query($sql);
     .empty {
         background: white;
         padding: 20px;
-        border: 1px solid #ccc;
+        border: 1px solid #cfcfcf;
         text-align: center;
         font-weight: bold;
     }
@@ -173,7 +179,7 @@ $result = $conn->query($sql);
         </a>
     </div>
     
-    <h2>BOOKING REQUESTS</h2>
+    <h2>Booking Requests</h2>
 
     <?php if ($result->num_rows > 0) { ?>
       <table>

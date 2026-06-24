@@ -75,29 +75,22 @@ include "db.php";
 
         main {
             flex: 1;
+            padding: 60px 40px;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
+            flex-direction: column;
         }
 
         .container {
-            width: 95%;
+            width: 100%;
             max-width: 1400px;
-            margin: auto;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 10px;
             text-align: left;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         h2 {
-            margin: 0 0 20px 0;
+            margin-bottom: 25px;
             font-size: 24px;
             font-weight: bold;
             color: #000;
-            text-transform: uppercase;
         }
 
         .back-btn {
@@ -126,12 +119,14 @@ include "db.php";
         .search-container input {
             width: 300px;
             height: 35px;
-            border: 1px solid #ddd;
+            border: 1px solid #ccc;
             border-radius: 7px;
             padding: 8px 12px;
             font-size: 13px;
+            background: white;
         }
 
+        /* Synchronized Table Styling */
         table {
             width: 100%;
             background-color: #ffffff;
@@ -139,21 +134,23 @@ include "db.php";
             margin-top: 20px;
         }
 
-        table th,
-        table td {
-            border: 1px solid #bdc3c7;
-            padding: 12px;
-            text-align: center;
-        }
-
         table th {
-            background-color: #C0C0C0;
+            background: #d9d9d9;
+            padding: 15px;
+            border: 1px solid #cfcfcf;
+            text-align: left;
             color: #000;
             font-weight: bold;
         }
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+        table td {
+            padding: 15px;
+            border: 1px solid #cfcfcf;
+            text-align: left;
+        }
+
+        table tr:hover {
+            background: #f5f5f5;
         }
 
         .item-link {
