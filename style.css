@@ -33,7 +33,7 @@ header {
 
 nav button,
 .nav-button {
-  background-color: #cfd8dc;
+  background-color: #858585;
   border: none;
   display: inline-block;
   padding: 10px 20px;
@@ -48,7 +48,7 @@ nav button,
 
 nav button:hover,
 .nav-button:hover {
-  background-color: #90caf9;
+  background-color: #83c0f3;
 }
 
 .login-box {
