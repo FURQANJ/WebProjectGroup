@@ -33,7 +33,7 @@ header {
 
 nav button,
 .nav-button {
-  background-color: #858585;
+  background-color: #b1b1b1;
   border: none;
   display: inline-block;
   padding: 10px 20px;
@@ -95,6 +95,7 @@ nav button:hover,
 
 .links {
   margin-top: 10px;
+  color:#002b7f;
 }
 
 .links a {
