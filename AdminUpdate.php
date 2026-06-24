@@ -167,7 +167,17 @@ include "db.php";
 <body>
 
     <header>
-        <div class="logo"><img src="UTeM Clear.png" alt="UTeM Logo"></div>
+        <div class="logo">
+            <img src="UTeM Clear.png" alt="UTeM Logo">
+        </div>
+        <nav style="height: 70vh;">
+            <ul style="display: flex; flex-direction: column; height: 100%; list-style: none; padding: 0; margin: 0;">
+                <li><a href="AdminBookingLog.php">BOOKING LOG</a></li>
+                <li><a href="AdminBookingRequest.php">BOOKING REQUESTS</a></li>
+                <li><a href="AdminUpdate.php">COURT/EQUIPMENT UPDATE</a></li>
+                <li style="margin-top: auto; padding-bottom: 20px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
+            </ul>
+        </nav>
     </header>
 
     <main>
