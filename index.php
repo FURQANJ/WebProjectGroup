@@ -116,8 +116,8 @@ ob_end_flush();
     <div class="notice">
       <p><strong>Best Viewed By Users:</strong></p>
       <p>Users must be responsible for equipments that are borrowed.</p>
-      <p>Users must return equipments borrowed in good condition before booking timer ends.</p>
-      <p>Users who fail to comply with said rules above will be held accountable appropriately.</p>
+      <p>Users must return equipments in good condition before booking timer ends.</p>
+      <p>Users must follow these rules to avoid account penalties and disciplinary action.</p>
     </div>
     <div class="social">
       <p><strong>Our Socials:</strong></p>
