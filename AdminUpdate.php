@@ -93,6 +93,17 @@ include "db.php";
             color: #000;
         }
 
+        h3 {
+            margin-top: 35px;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #000;
+            text-transform: uppercase;
+            border-bottom: 2px solid #d9d9d9;
+            padding-bottom: 5px;
+        }
+
         .back-btn {
             display: block;
             text-align: left;
@@ -131,7 +142,7 @@ include "db.php";
             width: 100%;
             background-color: #ffffff;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-bottom: 10px;
         }
 
         table th {
@@ -186,13 +197,14 @@ include "db.php";
             <h2>Update Equipment/Court</h2>
 
             <div class="search-container">
-                <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search Name..">
+                <input type="text" id="searchInput" onkeyup="filterTables()" placeholder="Search Name..">
             </div>
 
-            <table id="inventoryTable">
+            <h3>Equipment Inventory</h3>
+            <table class="inventory-table">
                 <thead>
                     <tr>
-                        <th>Equipment/Court ID</th>
+                        <th>Equipment ID</th>
                         <th>Name</th>
                         <th>Type</th>
                         <th>Quantity</th>
@@ -203,24 +215,17 @@ include "db.php";
                 </thead>
                 <tbody>
                     <?php
-                    $sql = "SELECT e.equipment_id AS id, e.equipment_details AS details, 'EQUIPMENT' AS type, e.equipment_quantity AS quantity, e.equipment_status AS status, m.timestamp AS last_date, a.admin_name AS updated_by
-                            FROM equipment e
-                            LEFT JOIN maintenance m ON m.equipment_id = e.equipment_id AND m.maintenance_id = (SELECT MAX(maintenance_id) FROM maintenance WHERE equipment_id = e.equipment_id)
-                            LEFT JOIN admin a ON m.admin_id = a.admin_id
-                            
-                            UNION
-                            
-                            SELECT v.venue_id AS id, v.venue_details AS details, 'COURT' AS type, 1 AS quantity, v.venue_status AS status, m.timestamp AS last_date, a.admin_name AS updated_by
-                            FROM venue v
-                            LEFT JOIN maintenance m ON m.venue_id = v.venue_id AND m.maintenance_id = (SELECT MAX(maintenance_id) FROM maintenance WHERE venue_id = v.venue_id)
-                            LEFT JOIN admin a ON m.admin_id = a.admin_id";
+                    $equipment_sql = "SELECT e.equipment_id AS id, e.equipment_details AS details, 'EQUIPMENT' AS type, e.equipment_quantity AS quantity, e.equipment_status AS status, m.timestamp AS last_date, a.admin_name AS updated_by
+                                      FROM equipment e
+                                      LEFT JOIN maintenance m ON m.equipment_id = e.equipment_id AND m.maintenance_id = (SELECT MAX(maintenance_id) FROM maintenance WHERE equipment_id = e.equipment_id)
+                                      LEFT JOIN admin a ON m.admin_id = a.admin_id";
 
-                    $result = mysqli_query($conn, $sql);
+                    $equipment_result = mysqli_query($conn, $equipment_sql);
 
-                    if ($result && mysqli_num_rows($result) > 0) {
-                        while ($row = mysqli_fetch_assoc($result)) {
+                    if ($equipment_result && mysqli_num_rows($equipment_result) > 0) {
+                        while ($row = mysqli_fetch_assoc($equipment_result)) {
                             $display_admin = !empty($row['updated_by']) ? htmlspecialchars($row['updated_by']) : '-';
-                            $display_qty = ($row['type'] === 'COURT') ? '-' : htmlspecialchars($row['quantity']);
+                            $display_qty = htmlspecialchars($row['quantity']);
                             $display_date = !empty($row['last_date']) ? date("d/m/Y", strtotime($row['last_date'])) : '-';
 
                             echo "<tr>";
@@ -234,7 +239,51 @@ include "db.php";
                             echo "</tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='7'>No records found in database.</td></tr>";
+                        echo "<tr><td colspan='7'>No equipment records found in database.</td></tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+
+            <h3>Court / Venue Status</h3>
+            <table class="inventory-table">
+                <thead>
+                    <tr>
+                        <th>Court ID</th>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Quantity</th>
+                        <th>Availability Status</th>
+                        <th>Last Updated Date</th>
+                        <th>Updated By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $court_sql = "SELECT v.venue_id AS id, v.venue_details AS details, 'COURT' AS type, 1 AS quantity, v.venue_status AS status, m.timestamp AS last_date, a.admin_name AS updated_by
+                                  FROM venue v
+                                  LEFT JOIN maintenance m ON m.venue_id = v.venue_id AND m.maintenance_id = (SELECT MAX(maintenance_id) FROM maintenance WHERE venue_id = v.venue_id)
+                                  LEFT JOIN admin a ON m.admin_id = a.admin_id";
+
+                    $court_result = mysqli_query($conn, $court_sql);
+
+                    if ($court_result && mysqli_num_rows($court_result) > 0) {
+                        while ($row = mysqli_fetch_assoc($court_result)) {
+                            $display_admin = !empty($row['updated_by']) ? htmlspecialchars($row['updated_by']) : '-';
+                            $display_date = !empty($row['last_date']) ? date("d/m/Y", strtotime($row['last_date'])) : '-';
+
+                            echo "<tr>";
+                            echo "<td><a class='item-link' href='AdminEditInventory.php?id=" . urlencode($row['id']) . "&type=" . urlencode($row['type']) . "'>" . htmlspecialchars($row['id']) . "</a></td>";
+                            echo "<td>" . htmlspecialchars($row['details']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['type']) . "</td>";
+                            echo "<td>-</td>";
+                            echo "<td>" . htmlspecialchars($row['status']) . "</td>";
+                            echo "<td>" . $display_date . "</td>"; 
+                            echo "<td>" . $display_admin . "</td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='7'>No court records found in database.</td></tr>";
                     }
                     ?>
                 </tbody>
@@ -243,15 +292,18 @@ include "db.php";
     </main>
 
     <script>
-        function filterTable() {
+        function filterTables() {
             let input = document.getElementById("searchInput").value.toUpperCase();
-            let table = document.getElementById("inventoryTable");
-            let tr = table.getElementsByTagName("tr");
-            for (let i = 1; i < tr.length; i++) {
-                let tdDetails = tr[i].getElementsByTagName("td")[1];
-                if (tdDetails) {
-                    let textValue = tdDetails.textContent || tdDetails.innerText;
-                    tr[i].style.display = textValue.toUpperCase().indexOf(input) > -1 ? "" : "none";
+            let tables = document.getElementsByClassName("inventory-table");
+            
+            for (let t = 0; t < tables.length; t++) {
+                let tr = tables[t].getElementsByTagName("tr");
+                for (let i = 1; i < tr.length; i++) {
+                    let tdDetails = tr[i].getElementsByTagName("td")[1];
+                    if (tdDetails) {
+                        let textValue = tdDetails.textContent || tdDetails.innerText;
+                        tr[i].style.display = textValue.toUpperCase().indexOf(input) > -1 ? "" : "none";
+                    }
                 }
             }
         }

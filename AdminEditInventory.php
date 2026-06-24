@@ -2,6 +2,12 @@
 session_start();
 include "db.php";
 
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: index.php");
+    exit();
+}
+
+$admin_id = $_SESSION['admin_id'];
 $target_id = $_GET['id'] ?? '';
 $type = $_GET['type'] ?? '';
 
@@ -42,7 +48,6 @@ if ($type === 'EQUIPMENT') {
 
 if (isset($_POST['update'])) {
     $new_status = $_POST['status'];
-    $admin_id = $_POST['admin_id'];
     $notes = $_POST['notes'];
 
     if ($type === 'EQUIPMENT') {
@@ -338,15 +343,6 @@ if (isset($_POST['update'])) {
                             <input type="number" id="quantity" name="quantity" value="<?php echo htmlspecialchars($quantity); ?>" min="0" required>
                         </div>
                     <?php } ?>
-
-                    <div class="form-group" style="max-width: 300px;">
-                        <label for="admin_id">Updated By (Admin ID) :</label>
-                        <select id="admin_id" name="admin_id" required>
-                            <option value="1">1 (IBAD)</option>
-                            <option value="2">2 (EMMIRUL)</option>
-                            <option value="3">3 (HASSAN)</option>
-                        </select>
-                    </div>
 
                     <div class="form-group">
                         <label for="notes">Maintenance Report / Notes</label>
