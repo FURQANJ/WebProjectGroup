@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 25, 2026 at 01:19 PM
+-- Generation Time: Jun 25, 2026 at 01:21 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -130,8 +130,8 @@ CREATE TABLE IF NOT EXISTS `guest` (
 INSERT INTO `guest` (`guest_id`, `guest_name`, `password`, `matrik`, `email`, `otp_code`, `otp_expiry`, `is_verified`) VALUES
 (1, NULL, 'bijak', 'D032410377', 'D032410377@student.utem.edu.my', NULL, NULL, 0),
 (4, 'Emmirul', '$2y$10$O2ztIskOsuCtPgZwDYjWt..HkOw99fiT2xB3vFsQh60gspwQ.LrXK', 'D032410370', 'emmiruliqwann@gmail.com', '413951', '2026-06-22 17:01:27', 0),
-(5, 'Furqan', '$2y$10$b.sPTpFsj7BwewbusZ/n4.y4I5K7Ez5YAIA06q0wPUnCu7D3rwNrS', 'd032410185', 'fur@gmail.com', NULL, NULL, 1),
-(6, 'Jazib', '$2y$10$7LzQE4Q5mQM7UPtXhz7KouFmhVcr8UihiVbRl173s8rpKcKQxh2ku', 'D032410108', 'jazib@gmail.com', NULL, NULL, 1);
+(5, 'Furqan', 'furqan123', 'd032410185', 'fur@gmail.com', NULL, NULL, 1),
+(6, 'Jazib', 'jazib123', 'D032410108', 'jazib@gmail.com', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
