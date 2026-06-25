@@ -46,9 +46,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="header-container">
       <img src="UTeM Clear.png" alt="UTeM Logo" class="logo">
       <nav>
-        <button type="button" onclick="openPopup('Location', 'Pusat Sukan UTeM.')">Location</button>
-      
-        <button type="button" onclick="openPopup('Help', 'No Tel Technician: +60-1140225591')">Help</button>
+        <button type="button" onclick="window.open('https://www.google.com/maps?q=Stadium+UTeM,+76100+Durian+Tunggal,+Melaka', '_blank')">Location</button>
+        <button type="button" onclick="openPopup('Contact Us', 'No Tel Technician: +60-1140225591')">Contact Us</button>
       </nav>
     </div>
   </header>
