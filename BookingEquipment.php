@@ -5,7 +5,7 @@ include "db.php";
 $current_guest = $_SESSION['guest_id'] ?? null;
 $guest_name = $_SESSION['guest_name'] ?? null;
 
-// Fallback: Jika guest_name tiada dalam session, ambil terus dari database
+// fallback kalau guest name xde dlm session, ambik dari database
 if ($current_guest && !$guest_name) {
     $name_query = mysqli_query($conn, "SELECT guest_name FROM guest WHERE guest_id = '$current_guest' LIMIT 1");
     if ($name_query && mysqli_num_rows($name_query) > 0) {
@@ -66,20 +66,42 @@ if (isset($_POST['submit'])) {
   $new_from = trim($_POST['timeFrom']);
   $new_to = trim($_POST['timeTo']);
 
-  // Server-side fallback check
   $conflict_found = false;
-  foreach ($active_bookings as $booking) {
-    if ($booking['court'] === $new_court && $booking['date'] === $new_date) {
-      if ($new_from < $booking['to'] && $new_to > $booking['from']) {
-        $conflict_found = true;
-        break;
+
+  // server check weekday monday = 1 friday = 5 sunday = 7
+  $day_of_week = date('N', strtotime($new_date));
+  if ($day_of_week > 5) {
+    echo "<script>alert('Tempahan hanya dibenarkan pada hari bekerja sahaja (Isnin hingga Jumaat).');</script>";
+    $conflict_found = true;
+  }
+
+  // server check operating hours 8am smpai 12 am
+  $from_parts = explode(':', $new_from);
+  $to_parts = explode(':', $new_to);
+  $from_mins = intval($from_parts[0]) * 60 + intval($from_parts[1]);
+  $to_mins = (intval($to_parts[0]) == 0 && intval($to_parts[1]) == 0) ? 1440 : (intval($to_parts[0]) * 60 + intval($to_parts[1]));
+
+  if ($from_mins < 480 || $to_mins > 1440 || $to_mins <= $from_mins) {
+    echo "<script>alert('Masa tempahan mestilah di antara jam 8:00 AM hingga 12:00 AM sahaja.');</script>";
+    $conflict_found = true;
+  }
+
+  // server fallback check
+  if (!$conflict_found) {
+    foreach ($active_bookings as $booking) {
+      if ($booking['court'] === $new_court && $booking['date'] === $new_date) {
+        if ($new_from < $booking['to'] && $new_to > $booking['from']) {
+          $conflict_found = true;
+          break;
+        }
       }
     }
   }
 
-  if ($conflict_found) {
+  // check kalau ada conflict sbb booking yg dah ada
+  if ($conflict_found && ($day_of_week <= 5 && !($from_mins < 480 || $to_mins > 1440 || $to_mins <= $from_mins))) {
     echo "<script>alert('Maaf, slot masa ini telah ditempah oleh pengguna lain. Sila pilih masa atau court yang lain.');</script>";
-  } else {
+  } elseif (!$conflict_found) {
     // klau xde conflict, sambung je
     $data_fields = [
       $_POST['fullName'],
@@ -447,7 +469,7 @@ if (isset($_POST['submit'])) {
         }
       });
 
-      // kaitkan court dgn equipment (Casing must match exactly with DB)
+      // kaitkan court dgn equipment 
       const equipmentMap = {
         "Tennis Court (1)": "Tennis Ball",
         "Tennis Court (2)": "Tennis Ball",
@@ -479,9 +501,9 @@ if (isset($_POST['submit'])) {
 
         eqSelect.value = foundMatch ? requiredEq : "";
 
-        // Inform user if equipment is out of stock/not available in DB
+        // notice user kalau equipment out of stock dkt dlm database
         if (requiredEq && !foundMatch) {
-          eqUnavailableMsg.innerText = `Peralatan (${requiredEq}) tidak tersedia atau habis stok buat masa ini.`;
+          eqUnavailableMsg.innerText = `Equipment (${requiredEq}) is not available or have run out of stock.`;
           eqUnavailableMsg.style.display = "block";
         } else {
           eqUnavailableMsg.style.display = "none";
@@ -492,24 +514,30 @@ if (isset($_POST['submit'])) {
 
       // logic time constraint + auto block
       function updateTimeConstraints() {
-        if (dateInput.value === todayStr) {
-          const currentTime = new Date();
-          const currentStr = String(currentTime.getHours()).padStart(2, '0') + ':' + String(currentTime.getMinutes()).padStart(2, '0');
+        const selectedDateVal = dateInput.value;
+        const currentTime = new Date();
+        const currentStr = String(currentTime.getHours()).padStart(2, '0') + ':' + String(currentTime.getMinutes()).padStart(2, '0');
 
-          timeFrom.setAttribute("min", currentStr);
+        // force start masa booking pkul 8 am
+        let minStartLimit = "08:00";
 
-          // auto correct to current time kalau user try nak bypass minimum
-          if (timeFrom.value && timeFrom.value < currentStr) {
-            timeFrom.value = currentStr;
+        if (selectedDateVal === todayStr) {
+          // kalau haritu weekday pastu lebih 8 am, pakai current time waktu tu
+          if (currentStr > "08:00") {
+            minStartLimit = currentStr;
           }
-        } else {
-          timeFrom.removeAttribute("min");
         }
 
+        timeFrom.setAttribute("min", minStartLimit);
+
+        if (timeFrom.value && timeFrom.value < minStartLimit) {
+          timeFrom.value = minStartLimit;
+        }
+
+        // Limit To time constraint
         if (timeFrom.value) {
           timeTo.setAttribute("min", timeFrom.value);
 
-          // block 'To' time klau set sebelum 'From' time
           if (timeTo.value && timeTo.value <= timeFrom.value) {
             timeTo.value = "";
           }
@@ -536,6 +564,17 @@ if (isset($_POST['submit'])) {
         const selFrom = timeFrom.value;
         const selTo = timeTo.value;
 
+        // check hari weekend
+        if (selDate) {
+          const dateParts = selDate.split('-');
+          const chosenDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+          const dayOfWeek = chosenDate.getDay(); // 0 tu Sunday, 6 tu Saturday
+          if (dayOfWeek === 0 || dayOfWeek === 6) {
+            isValid = false;
+            errorTxt = "Bookings are only allowed on weekdays (Monday to Friday).";
+          }
+        }
+
         // nak check time overlap dgn duration
         if (selFrom && selTo) {
           if (selTo <= selFrom) {
@@ -546,9 +585,21 @@ if (isset($_POST['submit'])) {
             const startParts = selFrom.split(':');
             const endParts = selTo.split(':');
             const startTotalMins = (parseInt(startParts[0]) * 60) + parseInt(startParts[1]);
-            const endTotalMins = (parseInt(endParts[0]) * 60) + parseInt(endParts[1]);
+            let endTotalMins = (parseInt(endParts[0]) * 60) + parseInt(endParts[1]);
 
-            if ((endTotalMins - startTotalMins) > 180) { // 180 minutes = 3 hours
+            // logic 12:00 am as akhir masa yg boleh booking
+            if (parseInt(endParts[0]) === 0 && parseInt(endParts[1]) === 0) {
+              endTotalMins = 1440;
+            }
+
+            // nak check limit booking masa
+            if (startTotalMins < 480) { // 8:00 AM = 480 min
+              isValid = false;
+              errorTxt = "Bookings must start from 8:00 AM onwards.";
+            } else if (endTotalMins > 1440 || (endTotalMins < startTotalMins && endTotalMins !== 1440)) {
+              isValid = false;
+              errorTxt = "Bookings must end by 12:00 AM midnight.";
+            } else if ((endTotalMins - startTotalMins) > 180) { // max duration 3 jam
               isValid = false;
               errorTxt = "Booking cannot exceed 3 hours.";
             }
@@ -565,7 +616,7 @@ if (isset($_POST['submit'])) {
         }
 
         // check ngan banding dgn booking yg dah ada
-        if (selCourt && selDate && selFrom && selTo) {
+        if (isValid && selCourt && selDate && selFrom && selTo) {
           for (let i = 0; i < activeBookings.length; i++) {
             let b = activeBookings[i];
             if (b.court === selCourt && b.date === selDate) {
@@ -578,12 +629,12 @@ if (isset($_POST['submit'])) {
           }
         }
 
-        // If the matching equipment is out of stock/unavailable in DB, do not allow submission
+        // kalau equipment unavailable dlm database, block submission
         const requiredEq = equipmentMap[selCourt];
         if (requiredEq && !Array.from(eqSelect.options).some(opt => opt.value === requiredEq && !opt.disabled)) {
           isValid = false;
           if (!errorTxt) {
-            errorTxt = "Peralatan tidak tersedia untuk mahkamah yang dipilih.";
+            errorTxt = "Equipment not available for the chosen court.";
           }
         }
 

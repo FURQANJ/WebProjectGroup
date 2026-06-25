@@ -44,20 +44,41 @@ if (isset($_POST['submit'])) {
   $new_from = trim($_POST['timeFrom']);
   $new_to = trim($_POST['timeTo']);
 
-  // nak check fallback
   $conflict_found = false;
-  foreach ($active_bookings as $booking) {
-    if ($booking['court'] === $new_court && $booking['date'] === $new_date) {
-      if ($new_from < $booking['to'] && $new_to > $booking['from']) {
-        $conflict_found = true;
-        break;
+
+  // server check weekday monday = 1 friday = 5 sunday = 7
+  $day_of_week = date('N', strtotime($new_date));
+  if ($day_of_week > 5) {
+    echo "<script>alert('Tempahan hanya dibenarkan pada hari bekerja sahaja (Isnin hingga Jumaat).');</script>";
+    $conflict_found = true;
+  }
+
+  // server check operating hours 8am smpai 12 am
+  $from_parts = explode(':', $new_from);
+  $to_parts = explode(':', $new_to);
+  $from_mins = intval($from_parts[0]) * 60 + intval($from_parts[1]);
+  $to_mins = (intval($to_parts[0]) == 0 && intval($to_parts[1]) == 0) ? 1440 : (intval($to_parts[0]) * 60 + intval($to_parts[1]));
+
+  if ($from_mins < 480 || $to_mins > 1440 || $to_mins <= $from_mins) {
+    echo "<script>alert('Masa tempahan mestilah di antara jam 8:00 AM hingga 12:00 AM sahaja.');</script>";
+    $conflict_found = true;
+  }
+
+  // server fall back check
+  if (!$conflict_found) {
+    foreach ($active_bookings as $booking) {
+      if ($booking['court'] === $new_court && $booking['date'] === $new_date) {
+        if ($new_from < $booking['to'] && $new_to > $booking['from']) {
+          $conflict_found = true;
+          break;
+        }
       }
     }
   }
 
-  if ($conflict_found) {
+  if ($conflict_found && !isset($day_of_week)) {
     echo "<script>alert('Maaf, slot masa ini telah ditempah oleh pengguna lain. Sila pilih masa atau court yang lain.');</script>";
-  } else {
+  } elseif (!$conflict_found) {
     $data_fields = [
       $_POST['fullName'],
       $_POST['phoneNumber'],
@@ -406,19 +427,27 @@ if (isset($_POST['submit'])) {
 
       // logic time constraint + auto block
       function updateTimeConstraints() {
-        if (dateInput.value === todayStr) {
-          const currentTime = new Date();
-          const currentStr = String(currentTime.getHours()).padStart(2, '0') + ':' + String(currentTime.getMinutes()).padStart(2, '0');
+        const selectedDateVal = dateInput.value;
+        const currentTime = new Date();
+        const currentStr = String(currentTime.getHours()).padStart(2, '0') + ':' + String(currentTime.getMinutes()).padStart(2, '0');
 
-          timeFrom.setAttribute("min", currentStr);
+        // force start masa booking pkul 8 am
+        let minStartLimit = "08:00";
 
-          if (timeFrom.value && timeFrom.value < currentStr) {
-            timeFrom.value = currentStr;
+        if (selectedDateVal === todayStr) {
+          // kalau haritu weekday pastu lebih 8 am, pakai current time waktu tu
+          if (currentStr > "08:00") {
+            minStartLimit = currentStr;
           }
-        } else {
-          timeFrom.removeAttribute("min");
         }
 
+        timeFrom.setAttribute("min", minStartLimit);
+
+        if (timeFrom.value && timeFrom.value < minStartLimit) {
+          timeFrom.value = minStartLimit;
+        }
+
+        // Limit To time constraint
         if (timeFrom.value) {
           timeTo.setAttribute("min", timeFrom.value);
 
@@ -449,18 +478,40 @@ if (isset($_POST['submit'])) {
         const selFrom = timeFrom.value;
         const selTo = timeTo.value;
 
+        // check hari weekend
+        if (selDate) {
+          const dateParts = selDate.split('-');
+          const chosenDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+          const dayOfWeek = chosenDate.getDay(); // 0 tu Sunday, 6 tu Saturday
+          if (dayOfWeek === 0 || dayOfWeek === 6) {
+            isValid = false;
+            errorTxt = "Bookings are only allowed on weekdays (Monday to Friday).";
+          }
+        }
+
         if (selFrom && selTo) {
           if (selTo <= selFrom) {
             isValid = false;
             errorTxt = "End time must be after Start time.";
           } else {
-            // check max duration 3 jam
             const startParts = selFrom.split(':');
             const endParts = selTo.split(':');
             const startTotalMins = (parseInt(startParts[0]) * 60) + parseInt(startParts[1]);
-            const endTotalMins = (parseInt(endParts[0]) * 60) + parseInt(endParts[1]);
+            let endTotalMins = (parseInt(endParts[0]) * 60) + parseInt(endParts[1]);
+            
+            // logic 12:00 am sebagai akhir masa yg boleh booking
+            if (parseInt(endParts[0]) === 0 && parseInt(endParts[1]) === 0) {
+              endTotalMins = 1440;
+            }
 
-            if ((endTotalMins - startTotalMins) > 180) {
+            // nak check limit booking masa
+            if (startTotalMins < 480) { // 8:00 AM = 480 min
+              isValid = false;
+              errorTxt = "Bookings must start from 8:00 AM onwards.";
+            } else if (endTotalMins > 1440 || (endTotalMins < startTotalMins && endTotalMins !== 1440)) {
+              isValid = false;
+              errorTxt = "Bookings must end by 12:00 AM midnight.";
+            } else if ((endTotalMins - startTotalMins) > 180) { // max duration 3 jam
               isValid = false;
               errorTxt = "Booking cannot exceed 3 hours.";
             }
@@ -468,7 +519,7 @@ if (isset($_POST['submit'])) {
         }
 
         // check dgn booking yg dah ada
-        if (selCourt && selDate && selFrom && selTo) {
+        if (isValid && selCourt && selDate && selFrom && selTo) {
           for (let i = 0; i < activeBookings.length; i++) {
             let b = activeBookings[i];
             if (b.court === selCourt && b.date === selDate) {
