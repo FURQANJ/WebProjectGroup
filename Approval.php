@@ -3,6 +3,37 @@ session_start();
 include "db.php";
 
 $current_guest = $_SESSION['guest_id'] ?? null;
+
+// utk cancelling
+if (isset($_POST['cancel_booking_id']) && $current_guest) {
+    $cancel_id = intval($_POST['cancel_booking_id']);
+
+    // pastikan booking yg pending or approved tu adalah user punya
+    $check_stmt = $conn->prepare("SELECT booking_status FROM booking WHERE booking_id = ? AND guest_id = ?");
+    $check_stmt->bind_param("is", $cancel_id, $current_guest);
+    $check_stmt->execute();
+    $check_result = $check_stmt->get_result();
+
+    if ($check_result && $check_result->num_rows > 0) {
+        $row = $check_result->fetch_assoc();
+        if ($row['booking_status'] === 'Pending' || $row['booking_status'] === 'Approved') {
+            $update_stmt = $conn->prepare("UPDATE booking SET booking_status = 'Cancelled', rejection_reason = 'Cancelled by user' WHERE booking_id = ?");
+            $update_stmt->bind_param("i", $cancel_id);
+            if ($update_stmt->execute()) {
+                echo "<script>alert('Tempahan berjaya dibatalkan.'); window.location.href='Approval.php';</script>";
+                exit();
+            } else {
+                echo "<script>alert('Gagal membatalkan tempahan. Sila cuba lagi.');</script>";
+            }
+            $update_stmt->close();
+        } else {
+            echo "<script>alert('Hanya tempahan berstatus Pending atau Approved boleh dibatalkan.');</script>";
+        }
+    } else {
+        echo "<script>alert('Tempahan tidak sah.');</script>";
+    }
+    $check_stmt->close();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -95,29 +126,39 @@ $current_guest = $_SESSION['guest_id'] ?? null;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
-    table {
-      width: 100%;
-      background-color: #ffffff;
-      border-collapse: collapse;
-      margin-top: 20px;
+    h2 {
+      text-align: left;
+      margin-top: 0;
+      margin-bottom: 25px;
+      text-transform: uppercase;
     }
 
-    table th,
-    table td {
-      border: 1px solid #bdc3c7;
-      padding: 12px;
-      text-align: center;
-      font-size: 13px;
+    .booking-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
 
-    table th {
-      background-color: #C0C0C0;
-      color: #000;
-      font-weight: bold;
+    .booking-table th {
+        background: #d9d9d9;
+        padding: 15px;
+        border: 1px solid #cfcfcf;
+        text-align: center; 
+        font-weight: bold;
+        font-size: 13px;
+        text-transform: uppercase;
     }
 
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
+    .booking-table td {
+        padding: 15px;
+        border: 1px solid #cfcfcf;
+        font-size: 13px;
+        text-align: center; 
+    }
+
+    .booking-table tr:hover {
+        background: #f5f5f5;
     }
 
     .status-approved {
@@ -125,13 +166,13 @@ $current_guest = $_SESSION['guest_id'] ?? null;
       font-weight: bold;
     }
 
-    .status-rejected {
+    .status-rejected, .status-cancelled {
       color: #c62828;
       font-weight: bold;
     }
 
     .status-pending {
-      color: #e67e22;
+      color: #d68910; 
       font-weight: bold;
     }
 
@@ -139,7 +180,30 @@ $current_guest = $_SESSION['guest_id'] ?? null;
       color: #c62828;
       font-size: 12px;
     }
+
+    .cancel-btn {
+      background-color: #c62828;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 12px;
+      transition: background-color 0.2s;
+    }
+
+    .cancel-btn:hover {
+      background-color: #a02020;
+    }
   </style>
+  <script>
+    function confirmCancellation(form) {
+      if(confirm("Adakah anda pasti mahu membatalkan tempahan ini?")) {
+        form.submit();
+      }
+    }
+  </script>
 </head>
 
 <body>
@@ -162,21 +226,20 @@ $current_guest = $_SESSION['guest_id'] ?? null;
     <div class="container">
       <h2>APPROVAL / STATUS</h2>
 
-      <table>
+      <table class="booking-table">
         <thead>
           <tr>
-            <th>Full Name</th>
-            <th>Phone Number</th>
+            <th>Booking ID</th>
+            <th>Name</th>
+            <th>Phone</th>
             <th>Email</th>
-            <th>Reason</th>
             <th>Court</th>
-            <th>Date</th>
-            <th>Time From</th>
-            <th>Time To</th>
             <th>Equipment</th>
-            <th>Quantity</th>
+            <th>Date</th>
+            <th>Time</th>
             <th>Status</th>
-            <th>Rejection Reason</th>
+            <th>Notes/Reason</th>
+            <th>Action</th>
           </tr>
         </thead>
 
@@ -199,10 +262,11 @@ $current_guest = $_SESSION['guest_id'] ?? null;
                       $details_string = $row['booking_details'] ?? '';
                       $val = explode("\t", $details_string);
 
+                      $booking_id = $row['booking_id'];
                       $name      = htmlspecialchars($val[0] ?? '-');
                       $phone     = htmlspecialchars($val[1] ?? '-');
                       $email     = htmlspecialchars($val[2] ?? '-');
-                      $reason    = htmlspecialchars($val[3] ?? '-');
+                      $reason    = htmlspecialchars($val[3] ?? '-'); 
                       $court     = htmlspecialchars($val[4] ?? '-');
                       $date      = htmlspecialchars($val[5] ?? '-');
                       $timeFrom  = htmlspecialchars($val[6] ?? '-');
@@ -210,48 +274,61 @@ $current_guest = $_SESSION['guest_id'] ?? null;
                       $equipment = (!isset($val[8]) || trim($val[8]) === '') ? '-' : htmlspecialchars($val[8]);
                       $quantity  = (!isset($val[9]) || trim($val[9]) === '') ? '-' : htmlspecialchars($val[9]);
 
+                      $timeDisplay = $timeFrom . " - " . $timeTo;
+                      $equipmentDisplay = ($equipment !== '-' && $equipment !== 'N/A') ? $equipment . " (x" . $quantity . ")" : "-";
+
                       $status = $row['booking_status'] ?? 'Pending';
 
                       if ($status === 'Approved') {
                           $status_class = 'status-approved';
                       } elseif ($status === 'Rejected') {
                           $status_class = 'status-rejected';
+                      } elseif ($status === 'Cancelled') {
+                          $status_class = 'status-cancelled';
                       } else {
                           $status_class = 'status-pending';
                       }
 
-                      if ($status === 'Rejected') {
-                          $rejection_reason = htmlspecialchars($row['rejection_reason'] ?? '-');
-
-                          if ($rejection_reason === '') {
-                              $rejection_reason = '-';
+                      $rejection_reason = '-';
+                      if ($status === 'Rejected' || $status === 'Cancelled') {
+                          $raw_reason = $row['rejection_reason'] ?? '';
+                          if (trim($raw_reason) !== '') {
+                              $rejection_reason = htmlspecialchars($raw_reason);
                           }
-                      } else {
-                          $rejection_reason = '-';
                       }
 
                       echo "<tr>";
+                      echo "<td>B" . str_pad($booking_id, 4, '0', STR_PAD_LEFT) . "</td>";
                       echo "<td>" . $name . "</td>";
                       echo "<td>" . $phone . "</td>";
                       echo "<td>" . $email . "</td>";
-                      echo "<td>" . $reason . "</td>";
                       echo "<td>" . $court . "</td>";
+                      echo "<td>" . $equipmentDisplay . "</td>";
                       echo "<td>" . $date . "</td>";
-                      echo "<td>" . $timeFrom . "</td>";
-                      echo "<td>" . $timeTo . "</td>";
-                      echo "<td>" . $equipment . "</td>";
-                      echo "<td>" . $quantity . "</td>";
+                      echo "<td>" . $timeDisplay . "</td>";
                       echo "<td><span class='" . $status_class . "'>" . htmlspecialchars($status) . "</span></td>";
                       echo "<td><span class='rejection-reason'>" . $rejection_reason . "</span></td>";
+                      
+                      echo "<td>";
+                      if ($status === 'Pending' || $status === 'Approved') {
+                          echo "<form method='POST' style='margin:0;' onsubmit='event.preventDefault(); confirmCancellation(this);'>
+                                  <input type='hidden' name='cancel_booking_id' value='" . $booking_id . "'>
+                                  <button type='submit' class='cancel-btn'>Cancel</button>
+                                </form>";
+                      } else {
+                          echo "-";
+                      }
+                      echo "</td>";
+                      
                       echo "</tr>";
                   }
               } else {
-                  echo "<tr><td colspan='12'>No database booking records found for your account.</td></tr>";
+                  echo "<tr><td colspan='11' style='text-align: center; font-style: italic;'>No database booking records found for your account.</td></tr>";
               }
 
               $stmt->close();
           } else {
-              echo "<tr><td colspan='12' style='color: #c62828;'>Please log in to view your reservation status.</td></tr>";
+              echo "<tr><td colspan='11' style='text-align: center; color: #c62828;'>Please log in to view your reservation status.</td></tr>";
           }
           ?>
         </tbody>
