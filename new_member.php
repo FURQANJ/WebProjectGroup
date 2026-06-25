@@ -90,15 +90,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   <footer>
     <div class="notice">
-      <p><strong>Peringatan:</strong></p>
-      <p>Pengguna perlulah bertanggungjawab atas barang tersebut.</p>
-      <p>Pengguna perlu menghantar barang 3 minit sebelum masa tamat dalam keadaan baik.</p>
-      <p>Penalti akan dikenakan atas individu yang tidak dapat mematuhi peraturan tersebut.</p>
+      <p><strong>Best Viewed By Users:</strong></p>
+      <p>Users must be responsible for equipments that are borrowed.</p>
+      <p>Users must return equipments in good condition before booking timer ends.</p>
+      <p>Users must follow these rules to avoid account penalties and disciplinary action.</p>
     </div>
     <div class="social">
-      <a href="https://www.utem.edu.my/en/">🌐</a>
-      <a href="https://www.instagram.com/pusatsukanutem/">📸</a>
-      <a href="https://www.facebook.com/PusatSukanUTeM/">📘</a>
+      <p><strong>Our Socials:</strong></p>
+      <a href="https://www.utem.edu.my/en/"><img src="Universiti_Teknikal_Malaysia_Melaka_logo.png" alt="UTeM"></a>
+      <a href="https://www.instagram.com/pusatsukanutem/"><img src="Instagram_icon.png" alt="Instagram"></a>
+      <a href="https://www.facebook.com/PusatSukanUTeM/"><img src="Facebook_Logo.png" alt="Facebook"></a>
     </div>
   </footer>
 </body>
