@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <img src="UTeM Clear.png" alt="UTeM Logo" class="logo">
       <nav>
         <button type="button" onclick="openPopup('Location', 'Pusat Sukan UTeM.')">Location</button>
-        <button type="button" onclick="openCategoriesPopup()">Categories</button>
+     
         <button type="button" onclick="openPopup('Help', 'No Tel Technician: +60-1140225591')">Help</button>
       </nav>
     </div>
