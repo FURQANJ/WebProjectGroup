@@ -45,8 +45,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $passwordMatch = true;
       }
 
-      if ($passwordMatch) {
+if ($passwordMatch) {
         $_SESSION['guest_id'] = $userRow['guest_id'];
+        $_SESSION['guest_name'] = $userRow['guest_name']; // ADD THIS LINE
         $_SESSION['matrik'] = $userRow['matrik'];
         $_SESSION['role'] = "student";
         header("Location: MainPage.html");
