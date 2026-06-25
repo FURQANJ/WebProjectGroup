@@ -55,8 +55,7 @@ if (isset($_POST['submit']))
   <title>Booking Space - UTeM</title>
 
   <style>
-    * 
-    {
+    * {
       box-sizing: border-box;
     }
 
@@ -128,13 +127,37 @@ if (isset($_POST['submit']))
       padding-left: 30px;
     }
 
-    main 
-    {
+    main {
+      flex: 1;
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-centered {
       flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 40px;
+      width: 100%;
+    }
+
+    .back-btn {
+      display: block;
+      text-align: left;
+      margin-bottom: 15px;
+      transition: transform 0.2s ease;
+      width: max-content;
+    }
+
+    .back-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .back-arrow-img {
+      width: 35px;
+      height: auto;
+      vertical-align: middle;
     }
 
     #formSection 
@@ -251,92 +274,98 @@ if (isset($_POST['submit']))
       <img src="UTeM Clear.png" alt="UTeM Logo">
     </div>
 
-    <nav>
-      <ul>
+<nav style="height: 70vh;">
+      <ul style="display: flex; flex-direction: column; height: 100%; list-style: none; padding: 0; margin: 0;">
         <li><a href="MainPage.html">BOOKING SPACE</a></li>
         <li><a href="Approval.php">APPROVAL/STATUS</a></li>
-        <li style="margin-top: 400px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
+        <li style="margin-top: auto; padding-bottom: 20px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
-    <div id="formSection">
+    <a href="MainPage.html" class="back-btn">
+      <img src="BackArrowButton.png" alt="Back" class="back-arrow-img">
+    </a>
 
-      <div class="form-title">Booking Space</div>
+    <div class="form-centered">
+      <div id="formSection">
 
-      <form action="" method="post" onsubmit="return validateForm();">
+        <div class="form-title">Booking Space</div>
 
-        <div class="form-group">
-          <label for="fullName">Full Name</label>
-          <input type="text" id="fullName" name="fullName" placeholder="Your full name">
-        </div>
+        <form action="" method="post" onsubmit="return validateForm();">
 
-        <div class="form-row">
           <div class="form-group">
-            <label for="phoneNumber">No. H/P</label>
-            <input
-              type="tel"
-              id="phoneNumber"
-              name="phoneNumber"
-              placeholder="01xxxxxxx"
-              inputmode="numeric"
-              pattern="[0-9]*"
-              oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" placeholder="Your full name">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phoneNumber">No. H/P</label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                name="phoneNumber"
+                placeholder="01xxxxxxx"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="student@utem.edu.my">
+            </div>
           </div>
 
           <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="student@utem.edu.my">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="reason">Reason for Booking</label>
-          <textarea id="reason" name="reason" placeholder="State your purpose here..."></textarea>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="court">Court</label>
-            <select id="court" name="court">
-              <option value="" disabled selected>Choose Court</option>
-              <option value="Tennis Court (1)">Tennis Court (1)</option>
-              <option value="Tennis Court (2)">Tennis Court (2)</option>
-              <option value="Badminton Court (1)">Badminton Court (1)</option>
-              <option value="Badminton Court (2)">Badminton Court (2)</option>
-              <option value="Basketball Court (1)">Basketball Court (1)</option>
-              <option value="Basketball Court (2)">Basketball Court (2)</option>
-              <option value="Futsal Court (1)">Futsal Court (1)</option>
-              <option value="Futsal Court (2)">Futsal Court (2)</option>
-              <option value="Football Field">Football Field</option>
-              <option value="Rugby Field">Rugby Field</option>
-            </select>
+            <label for="reason">Reason for Booking</label>
+            <textarea id="reason" name="reason" placeholder="State your purpose here..."></textarea>
           </div>
 
-          <div class="form-group">
-            <label for="dateChoose">Date</label>
-            <input type="date" id="dateChoose" name="date">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="court">Court</label>
+              <select id="court" name="court">
+                <option value="" disabled selected>Choose Court</option>
+                <option value="Tennis Court (1)">Tennis Court (1)</option>
+                <option value="Tennis Court (2)">Tennis Court (2)</option>
+                <option value="Badminton Court (1)">Badminton Court (1)</option>
+                <option value="Badminton Court (2)">Badminton Court (2)</option>
+                <option value="Basketball Court (1)">Basketball Court (1)</option>
+                <option value="Basketball Court (2)">Basketball Court (2)</option>
+                <option value="Futsal Court (1)">Futsal Court (1)</option>
+                <option value="Futsal Court (2)">Futsal Court (2)</option>
+                <option value="Football Field">Football Field</option>
+                <option value="Rugby Field">Rugby Field</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="dateChoose">Date</label>
+              <input type="date" id="dateChoose" name="date">
+            </div>
           </div>
-        </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="apptFrom">Time Slot ( From )</label>
-            <input type="time" id="apptFrom" name="timeFrom">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="apptFrom">Time Slot ( From )</label>
+              <input type="time" id="apptFrom" name="timeFrom">
+            </div>
+
+            <div class="form-group">
+              <label for="apptTo">Time Slot ( To )</label>
+              <input type="time" id="apptTo" name="timeTo">
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="apptTo">Time Slot ( To )</label>
-            <input type="time" id="apptTo" name="timeTo">
+          <div class="button-row">
+            <button type="submit" name="submit">Submit Booking</button>
           </div>
-        </div>
 
-        <div class="button-row">
-          <button type="submit" name="submit">Submit Booking</button>
-        </div>
-
-      </form>
+        </form>
+      </div>
     </div>
   </main>
 
