@@ -3,7 +3,21 @@ session_start();
 include "db.php";
 
 $current_guest = $_SESSION['guest_id'] ?? null;
-$guest_name = $_SESSION['guest_name'] ?? 'Unknown User';
+$guest_name = $_SESSION['guest_name'] ?? null;
+
+// Fallback: Jika guest_name tiada dalam session, ambil terus dari database
+if ($current_guest && !$guest_name) {
+    $name_query = mysqli_query($conn, "SELECT guest_name FROM guest WHERE guest_id = '$current_guest' LIMIT 1");
+    if ($name_query && mysqli_num_rows($name_query) > 0) {
+        $name_row = mysqli_fetch_assoc($name_query);
+        $guest_name = $name_row['guest_name'];
+        $_SESSION['guest_name'] = $guest_name;
+    }
+}
+
+if (!$guest_name) {
+    $guest_name = 'Unknown User';
+}
 
 // ambik data court
 $available_courts = [];
@@ -384,6 +398,7 @@ if (isset($_POST['submit'])) {
                   <option value="<?php echo htmlspecialchars($eq); ?>"><?php echo htmlspecialchars($eq); ?></option>
                 <?php endforeach; ?>
               </select>
+              <span id="eqUnavailableMsg" style="color: #d32f2f; font-size: 11px; display: none; margin-top: 4px; font-weight: bold;"></span>
             </div>
             <div class="form-group" style="flex: 1;">
               <label>Quantity</label>
@@ -414,6 +429,7 @@ if (isset($_POST['submit'])) {
       const courtSelect = document.getElementById("court");
       const eqSelect = document.getElementById("equipment");
       const qtyInput = document.getElementById("QtyInput");
+      const eqUnavailableMsg = document.getElementById("eqUnavailableMsg");
 
       // kira date
       const now = new Date();
@@ -431,17 +447,17 @@ if (isset($_POST['submit'])) {
         }
       });
 
-      // kaitkan court dgn equipment
+      // kaitkan court dgn equipment (Casing must match exactly with DB)
       const equipmentMap = {
         "Tennis Court (1)": "Tennis Ball",
         "Tennis Court (2)": "Tennis Ball",
         "Badminton Court (1)": "Badminton Shuttlecock",
         "Badminton Court (2)": "Badminton Shuttlecock",
-        "Basketball Court (1)": "BasketBall Ball",
-        "Basketball Court (2)": "BasketBall Ball",
+        "Basketball Court (1)": "Basketball Ball",
+        "Basketball Court (2)": "Basketball Ball",
         "Futsal Court (1)": "Futsal Ball",
         "Futsal Court (2)": "Futsal Ball",
-        "Football Field": "FootBall Ball",
+        "Football Field": "Football Ball",
         "Rugby Field": "Rugby Ball"
       };
 
@@ -462,6 +478,15 @@ if (isset($_POST['submit'])) {
         });
 
         eqSelect.value = foundMatch ? requiredEq : "";
+
+        // Inform user if equipment is out of stock/not available in DB
+        if (requiredEq && !foundMatch) {
+          eqUnavailableMsg.innerText = `Peralatan (${requiredEq}) tidak tersedia atau habis stok buat masa ini.`;
+          eqUnavailableMsg.style.display = "block";
+        } else {
+          eqUnavailableMsg.style.display = "none";
+        }
+
         validateLive();
       });
 
@@ -550,6 +575,15 @@ if (isset($_POST['submit'])) {
                 break;
               }
             }
+          }
+        }
+
+        // If the matching equipment is out of stock/unavailable in DB, do not allow submission
+        const requiredEq = equipmentMap[selCourt];
+        if (requiredEq && !Array.from(eqSelect.options).some(opt => opt.value === requiredEq && !opt.disabled)) {
+          isValid = false;
+          if (!errorTxt) {
+            errorTxt = "Peralatan tidak tersedia untuk mahkamah yang dipilih.";
           }
         }
 
