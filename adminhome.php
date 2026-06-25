@@ -2,13 +2,12 @@
 session_start();
 include "db.php";
 
-// Set defaults
 $view_mode = $_POST['view_mode'] ?? 'week'; 
 $week_val = $_POST['week_val'] ?? date('Y-\WW'); 
 $month_val = $_POST['month_val'] ?? date('Y-m'); 
 $sort_filter = $_POST['sort_filter'] ?? 'all'; 
 
-// Calculate start and end dates based on selected timeframe
+// kira start dgn end timeframe
 $start_date = '';
 $end_date = '';
 $display_range = '';
@@ -28,7 +27,7 @@ if ($view_mode === 'week') {
     $display_range = "Month: " . date('F Y', strtotime($start_date));
 }
 
-// Fetch active bookings (Pending or Approved)
+// ambik data active booking dri db
 $query = "SELECT booking_details FROM booking WHERE booking_status IN ('Pending', 'Approved')";
 $result = mysqli_query($conn, $query);
 
@@ -43,10 +42,10 @@ if ($result) {
         $qty = intval(trim($details[9] ?? '0'));
         
         if ($qty === 0 && $eq !== 'N/A' && $eq !== '') {
-            $qty = 1; // Fallback if quantity wasn't recorded but equipment exists
+            $qty = 1; 
         }
 
-        // Filter by the calculated date range
+        // filter ikut date 
         if ($date >= $start_date && $date <= $end_date) {
             if ($sort_filter === 'all') {
                 if ($court) { 
@@ -56,12 +55,12 @@ if ($result) {
                     $counts[$eq] = ($counts[$eq] ?? 0) + $qty; 
                 }
             } elseif (in_array($sort_filter, ['courts_only', 'most_booked_courts', 'least_booked_courts'])) {
-                // Focus only on courts
+                // court saja
                 if ($court) { 
                     $counts[$court] = ($counts[$court] ?? 0) + 1; 
                 }
             } else {
-                // For Most/Least equipment filters, focus only on equipment
+                // equipment saja
                 if ($eq && $eq !== 'N/A') { 
                     $counts[$eq] = ($counts[$eq] ?? 0) + $qty; 
                 }
@@ -70,14 +69,14 @@ if ($result) {
     }
 }
 
-// Apply sorting filters
+// logic sorting
 if ($sort_filter === 'most_booked' || $sort_filter === 'most_booked_courts') {
     arsort($counts);
 } elseif ($sort_filter === 'least_booked' || $sort_filter === 'least_booked_courts') {
     asort($counts);
 }
 
-// Prepare data for Chart.js
+// data untuk hntar gi Chart.js
 $chart_labels = json_encode(array_keys($counts));
 $chart_data = json_encode(array_values($counts));
 ?>
@@ -331,7 +330,7 @@ $chart_data = json_encode(array_values($counts));
     </main>
 
     <script>
-        // Toggle input fields based on Week/Month selection
+        // toggle ikut week/month
         document.getElementById('view_mode').addEventListener('change', function() {
             if (this.value === 'week') {
                 document.getElementById('week_input_group').style.display = 'block';
@@ -342,13 +341,13 @@ $chart_data = json_encode(array_values($counts));
             }
         });
 
-        // Initialize Chart.js Column Chart
+        // Chart.js column chart data
         const ctx = document.getElementById('analysisChart').getContext('2d');
         const labels = <?php echo $chart_labels; ?>;
         const dataVals = <?php echo $chart_data; ?>;
 
         if (labels.length === 0) {
-            // Display empty state if no data
+            // tunjuk empty kalau xde data
             ctx.font = "16px Arial";
             ctx.fillStyle = "#555";
             ctx.textAlign = "center";
