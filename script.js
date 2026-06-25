@@ -1,11 +1,9 @@
-
-function openPopup(title, message) {
-  document.getElementById("popupTitle").textContent = title;
-
-  document.getElementById("popupOverlay").classList.add("show");
+function openPopup(title, content) {
+    document.getElementById("popupTitle").innerText = title;
+    document.getElementById("popupContent").innerText = content; 
+    document.getElementById("popupOverlay").style.display = "flex"; 
 }
 
-
 function closePopup() {
-  document.getElementById("popupOverlay").classList.remove("show");
+    document.getElementById("popupOverlay").style.display = "none";
 }
