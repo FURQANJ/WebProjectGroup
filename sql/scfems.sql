@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jun 25, 2026 at 09:37 AM
+-- Generation Time: Jun 25, 2026 at 01:19 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -63,14 +63,16 @@ CREATE TABLE IF NOT EXISTS `booking` (
   `rejection_reason` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`booking_id`),
   KEY `guest_id` (`guest_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `booking`
 --
 
 INSERT INTO `booking` (`booking_id`, `booking_status`, `booking_details`, `guest_id`, `rejection_reason`) VALUES
-(14, 'Approved', 'Furqan	01114496805	fur@student.utem.edu.my	Riadah	Tennis Court (1)	2026-06-25	05:00	07:00	Tennis Ball	5', 5, NULL);
+(16, 'Pending', 'Furqan	01114496805	fur@student.utem.edu.my	Riadah	Tennis Court (1)	2026-06-26	18:30	21:30	Tennis Ball	5', 5, NULL),
+(17, 'Rejected', 'Jazib	0135313685	jazib@student.utem.edu.my	Nak belajar tennis dgn kawan2	Tennis Court (2)	2026-06-26	20:30	22:30	Tennis Ball	5', 6, ''),
+(18, 'Approved', 'Furqan	01114496805	fur@gmail.com	Nak main basketball lepas jumaat	Basketball Court (1)	2026-06-26	15:15	17:15	Basketball Ball	2', 5, NULL);
 
 -- --------------------------------------------------------
 
