@@ -239,6 +239,7 @@ sort($courts);
                             <option value="Pending" <?php if ($statusFilter == 'Pending') echo "selected"; ?>>Pending</option>
                             <option value="Approved" <?php if ($statusFilter == 'Approved') echo "selected"; ?>>Approved</option>
                             <option value="Rejected" <?php if ($statusFilter == 'Rejected') echo "selected"; ?>>Rejected</option>
+                            <option value="Cancelled" <?php if ($statusFilter == 'Cancelled') echo "selected"; ?>>Cancelled</option>
                         </select>
                     </div>
 
@@ -320,8 +321,9 @@ sort($courts);
                             if ($booking['status'] == 'Approved') $statusColor = "green";
                             if ($booking['status'] == 'Rejected') $statusColor = "red";
                             if ($booking['status'] == 'Pending') $statusColor = "#d68910";
+                            if ($booking['status'] == 'Cancelled') $statusColor = "black";
                             
-                            echo "<span style='color: {$statusColor}; font-weight: bold;'>" . htmlspecialchars($booking['status']) . "</span>"; 
+                            echo "<span style='color: {$statusColor}; font-weight: bold;'>" . htmlspecialchars($booking['status']) . "</span>";
                             ?>
                         </td>
                     </tr>
