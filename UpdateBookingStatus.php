@@ -2,7 +2,7 @@
 include "db.php";
 
 if (!isset($_POST['booking_id']) || !isset($_POST['status'])) {
-    header("Location: adminBookingRequests.php");
+    header("Location: AdminBookingRequest.php");
     exit();
 }
 
@@ -25,7 +25,7 @@ $sql = "UPDATE booking
 
 $conn->query($sql);
 
-    header("Location: bookingActionResult.php?status=Approved");
+    header("Location: BookingActionResult.php?status=Approved");
     exit();
 
 } elseif ($status === "Rejected") {
@@ -48,11 +48,11 @@ $sql = "UPDATE booking
 
 $conn->query($sql);
 
-    header("Location: bookingActionResult.php?status=Rejected");
+    header("Location: BookingActionResult.php?status=Rejected");
     exit();
 
 } else {
-    header("Location: adminBookingRequests.php");
+    header("Location: AdminBookingRequest.php");
     exit();
 }
 ?>

@@ -23,9 +23,14 @@ if ($status === 'Approved') {
   <title><?php echo $title; ?></title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
+      color: #000;
       background: url('Main Background.png') no-repeat center center fixed;
       background-size: cover;
       min-height: 100vh;
@@ -40,12 +45,47 @@ if ($status === 'Approved') {
       flex-direction: column;
       align-items: center;
       padding-top: 50px;
+      flex-shrink: 0;
     }
 
     .logo img {
       width: 150px;
       height: auto;
       margin-bottom: 95px;
+    }
+
+    nav {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    nav ul {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      list-style: none;
+    }
+
+    nav ul li {
+      width: 100%;
+      margin-bottom: 5px;
+    }
+
+    nav ul li a {
+      display: block;
+      padding: 15px 25px;
+      text-decoration: none;
+      color: #000000;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      background-color: #c4c4c4;
+      color: #000000;
+      border-left: 4px solid #000000;
+      padding-left: 30px;
     }
 
     main {
@@ -113,6 +153,14 @@ if ($status === 'Approved') {
   <div class="logo">
     <img src="UTeM Clear.png" alt="UTeM Logo">
   </div>
+  <nav style="height: 70vh;">
+    <ul style="display: flex; flex-direction: column; height: 100%; list-style: none; padding: 0; margin: 0;">
+      <li><a href="AdminBookingLog.php">BOOKING LOG</a></li>
+      <li><a href="AdminBookingRequest.php">BOOKING REQUESTS</a></li>
+      <li><a href="AdminUpdate.php">COURT/EQUIPMENT UPDATE</a></li>
+      <li style="margin-top: auto; padding-bottom: 20px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
+    </ul>
+  </nav>
 </header>
 
 <main>
