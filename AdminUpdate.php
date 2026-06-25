@@ -24,13 +24,17 @@ include "db.php";
 
         header {
             width: 250px;
-            min-height: 100vh;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
             background: #d3d3d3;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding-top: 50px;
             flex-shrink: 0;
+            z-index: 1000;
         }
 
         .logo img {
@@ -75,6 +79,7 @@ include "db.php";
 
         main {
             flex: 1;
+            margin-left: 250px;
             padding: 60px 40px;
             display: flex;
             flex-direction: column;
@@ -137,7 +142,6 @@ include "db.php";
             background: white;
         }
 
-        /* Synchronized Table Styling */
         table {
             width: 100%;
             background-color: #ffffff;
