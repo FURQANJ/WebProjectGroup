@@ -3,22 +3,22 @@ include "db.php";
 
 $courtFilter = $_POST['court'] ?? '';
 $dateFilter = $_POST['date'] ?? '';
-$sql = "SELECT * FROM booking";
-$result = mysqli_query($conn, $sql);
+$statusFilter = $_POST['status'] ?? '';
+$sortFilter = $_POST['sort'] ?? 'DESC'; // Default to latest (DESC)
+
+$query = "SELECT * FROM booking";
+$result = mysqli_query($conn, $query);
 
 $courts = [];
-
 $resultCourt = mysqli_query($conn, "SELECT booking_details FROM booking");
-
 while ($rowCourt = mysqli_fetch_assoc($resultCourt)) {
     $details = explode("\t", $rowCourt['booking_details']);
-
-    if (isset($details[4])) {
+    if (isset($details[4]) && trim($details[4]) !== '') {
         $courts[] = trim($details[4]);
     }
 }
-
 $courts = array_unique($courts);
+sort($courts);
 ?>
 
 <!DOCTYPE html>
@@ -126,6 +126,7 @@ $courts = array_unique($courts);
             width: 100%;
             border-collapse: collapse;
             background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .booking-table th {
@@ -133,6 +134,7 @@ $courts = array_unique($courts);
             padding: 15px;
             border: 1px solid #cfcfcf;
             text-align: left;
+            font-weight: bold;
         }
 
         .booking-table td {
@@ -152,9 +154,10 @@ $courts = array_unique($courts);
 
         .filter-container {
             display: flex;
-            gap: 30px;
+            flex-wrap: wrap; 
+            gap: 20px; 
             margin-top: 10px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .filter-group {
@@ -163,21 +166,21 @@ $courts = array_unique($courts);
         }
 
         .filter-group label {
-            font-size: 16px;
+            font-size: 14px;
             margin-bottom: 8px;
-            font-weight: 1000;
+            font-weight: bold;
+            text-transform: uppercase;
         }
 
         .filter-group select,
         .filter-group input {
-            width: 220px;
-            height: 45px;
-            border: none;
-            border-radius: 8px;
-            padding: 0 15px;
-            background: white;
-            font-size: 15px;
+            width: 200px;
+            height: 40px;
             border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 0 10px;
+            background: white;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -214,12 +217,11 @@ $courts = array_unique($courts);
                     <div class="filter-group">
                         <label>Court</label>
                         <select name="court" onchange="this.form.submit()">
-                            <option value="">Choose Court</option>
-
+                            <option value="">All Courts</option>
                             <?php foreach ($courts as $courtOption) { ?>
-                                <option value="<?php echo $courtOption; ?>"
+                                <option value="<?php echo htmlspecialchars($courtOption); ?>"
                                     <?php if ($courtFilter == $courtOption) echo "selected"; ?>>
-                                    <?php echo $courtOption; ?>
+                                    <?php echo htmlspecialchars($courtOption); ?>
                                 </option>
                             <?php } ?>
                         </select>
@@ -227,7 +229,25 @@ $courts = array_unique($courts);
 
                     <div class="filter-group">
                         <label>Date</label>
-                        <input type="date" name="date" value="<?php echo $dateFilter; ?>" onchange="this.form.submit()">
+                        <input type="date" name="date" value="<?php echo htmlspecialchars($dateFilter); ?>" onchange="this.form.submit()">
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select name="status" onchange="this.form.submit()">
+                            <option value="">All Statuses</option>
+                            <option value="Pending" <?php if ($statusFilter == 'Pending') echo "selected"; ?>>Pending</option>
+                            <option value="Approved" <?php if ($statusFilter == 'Approved') echo "selected"; ?>>Approved</option>
+                            <option value="Rejected" <?php if ($statusFilter == 'Rejected') echo "selected"; ?>>Rejected</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>Sort By</label>
+                        <select name="sort" onchange="this.form.submit()">
+                            <option value="DESC" <?php if ($sortFilter == 'DESC') echo "selected"; ?>>Latest First</option>
+                            <option value="ASC" <?php if ($sortFilter == 'ASC') echo "selected"; ?>>Oldest First</option>
+                        </select>
                     </div>
 
                 </div>
@@ -244,37 +264,73 @@ $courts = array_unique($courts);
                     <th>STATUS</th>
                 </tr>
 
-                <?php while ($row = mysqli_fetch_assoc($result)) {
-
+                <?php 
+                
+                // utk fetch dataaa
+                $all_bookings = [];
+                while ($row = mysqli_fetch_assoc($result)) {
                     $details = explode("\t", $row['booking_details']);
-
+                    
                     $name = $details[0] ?? '';
                     $phone = $details[1] ?? '';
                     $court = $details[4] ?? '';
                     $date = $details[5] ?? '';
-                    if ($courtFilter != '' && $court != $courtFilter) {
-                        continue;
-                    }
-
-                    if ($dateFilter != '' && $date != $dateFilter) {
-                        continue;
-                    }
                     $timeFrom = $details[6] ?? '';
                     $timeTo = $details[7] ?? '';
+                    $status = $row['booking_status'];
 
+                    // utk filterrr
+                    if ($courtFilter != '' && trim($court) != $courtFilter) continue;
+                    if ($dateFilter != '' && trim($date) != $dateFilter) continue;
+                    if ($statusFilter != '' && trim($status) != $statusFilter) continue;
+
+                    $row_data = [
+                        'id' => $row['booking_id'],
+                        'name' => $name,
+                        'phone' => $phone,
+                        'court' => $court,
+                        'date' => $date,
+                        'time' => $timeFrom . " - " . $timeTo,
+                        'status' => $status
+                    ];
+                    $all_bookings[] = $row_data;
+                }
+
+                // sorting ikut id booking
+                usort($all_bookings, function($a, $b) use ($sortFilter) {
+                    if ($sortFilter == 'DESC') {
+                        return $b['id'] <=> $a['id'];
+                    } else {
+                        return $a['id'] <=> $b['id'];
+                    }
+                });
+
+                foreach ($all_bookings as $booking) {
                 ?>
-
                     <tr>
-                        <td>B<?php echo str_pad($row['booking_id'], 4, '0', STR_PAD_LEFT); ?></td>
-                        <td><?php echo $name; ?></td>
-                        <td><?php echo $phone; ?></td>
-                        <td><?php echo $court; ?></td>
-                        <td><?php echo $date; ?></td>
-                        <td><?php echo $timeFrom . " - " . $timeTo; ?></td>
-                        <td><?php echo $row['booking_status']; ?></td>
+                        <td>B<?php echo str_pad($booking['id'], 4, '0', STR_PAD_LEFT); ?></td>
+                        <td><?php echo htmlspecialchars($booking['name']); ?></td>
+                        <td><?php echo htmlspecialchars($booking['phone']); ?></td>
+                        <td><?php echo htmlspecialchars($booking['court']); ?></td>
+                        <td><?php echo htmlspecialchars($booking['date']); ?></td>
+                        <td><?php echo htmlspecialchars($booking['time']); ?></td>
+                        <td>
+                            <?php 
+                            $statusColor = "black";
+                            if ($booking['status'] == 'Approved') $statusColor = "green";
+                            if ($booking['status'] == 'Rejected') $statusColor = "red";
+                            if ($booking['status'] == 'Pending') $statusColor = "#d68910";
+                            
+                            echo "<span style='color: {$statusColor}; font-weight: bold;'>" . htmlspecialchars($booking['status']) . "</span>"; 
+                            ?>
+                        </td>
                     </tr>
-
-                <?php } ?>
+                <?php } 
+                
+                if(empty($all_bookings)) {
+                    echo "<tr><td colspan='7' style='text-align: center; font-style: italic;'>No bookings found matching criteria.</td></tr>";
+                }
+                ?>
 
             </table>
 
