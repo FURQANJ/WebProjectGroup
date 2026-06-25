@@ -397,7 +397,7 @@ $chart_data = json_encode(array_values($counts));
                     plugins: {
                         legend: {
                             display: true,
-                            position: 'top'
+                            position: 'top
                         }
                     }
                 }
