@@ -18,6 +18,7 @@ header {
   color: white;
   padding: 15px 0;
 }
+
 .header-container {
   display: flex;
   justify-content: space-between;
@@ -25,12 +26,14 @@ header {
   width: 90%;
   margin: auto;
 }
+
 .logo {
   height: 60px;
 }
+
 nav button,
 .nav-button {
-  background-color: #cfd8dc;
+  background-color: #b1b1b1;
   border: none;
   display: inline-block;
   padding: 10px 20px;
@@ -42,25 +45,28 @@ nav button,
   text-decoration: none;
   font-size: 14px;
 }
+
 nav button:hover,
 .nav-button:hover {
-  background-color: #90caf9;
+  background-color: #83c0f3;
 }
 
 .login-box {
   width: 842px;
   margin: 60px auto;
   padding: 30px;
-  background: url("Log In Background 1.png") no-repeat center center;
+  background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.8)), url("Log In Background 1.png") no-repeat center center;
   background-size: cover;
   border-radius: 25px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
   text-align: center;
 }
+
 .login-box h2 {
   margin-bottom: 20px;
   font-weight: bold;
 }
+
 .login-box input {
   width: 80%;
   padding: 10px;
@@ -68,6 +74,7 @@ nav button:hover,
   border: 1px solid #ccc;
   border-radius: 10px;
 }
+
 .student-btn,
 .admin-btn {
   width: 80%;
@@ -80,45 +87,71 @@ nav button:hover,
   cursor: pointer;
   font-weight: bold;
 }
+
 .student-btn:hover,
 .admin-btn:hover {
   background-color: #004b93;
 }
+
 .links {
   margin-top: 10px;
+  color:#002b7f;
 }
+
 .links a {
   margin: 0 10px;
   color: white;
   text-decoration: none;
 }
+
 .links a:hover {
   text-decoration: underline;
 }
 
 footer {
-  background-color: #004b93; /* warna biru gelap */
-  color: white; /* teks putih */
+  background-color: #004b93;
+  color: white;
   padding: 20px 24px;
-  text-align: center;
-  position: fixed; /* sentiasa melekat di bawah */
+  position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%; /* penuh lebar */
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3); /* shadow atas */
+  width: 100%;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
   z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
 .notice {
-  margin-bottom: 10px;
+  text-align: left;
 }
+
+.social {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.social p {
+  margin: 0; 
+}
+
 .social a {
-  margin: 0 10px;
-  font-size: 24px;
-  text-decoration: none;
-  color: white;
+  display: inline-block;
+  transition: opacity 0.2s ease;
 }
+
 .social a:hover {
   opacity: 0.8;
+}
+
+.social img {
+  width: 30px; 
+  height: 30px;
+  object-fit: contain; 
+  vertical-align: middle;
+  border-radius: 4px; 
 }
 
 .content-page {
@@ -198,18 +231,14 @@ footer {
 }
 
 .category-card img {
-    display: block;
+  display: block;
   width: 160px;
   height: auto;
   margin: 0 auto;
   border-radius: 10px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
 }
 
 .category-card:hover {
-   transform: scale(1.05);
+  transform: scale(1.05);
 }
-
-
-
-

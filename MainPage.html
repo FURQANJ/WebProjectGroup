@@ -5,13 +5,11 @@
   <meta charset="UTF-8">
   <title>Pusat Sukan Court Booking</title>
   <style>
-    * 
-    {
+    * {
       box-sizing: border-box;
     }
 
-    body 
-    {
+    body {
       margin: 0;
       font-family: Arial, sans-serif;
       color: #000;
@@ -21,8 +19,7 @@
       display: flex;
     }
 
-    header 
-    {
+    header {
       width: 250px;
       min-height: 100vh;
       background: #d3d3d3;
@@ -32,35 +29,30 @@
       padding-top: 50px;
     }
 
-    .logo img
-    {
+    .logo img {
       width: 150px;
       height: auto;
       margin-bottom: 95px;
     }
 
-    nav 
-    {
+    nav {
       width: 100%;
       margin-top: 20px;
     }
 
-    nav ul 
-    {
+    nav ul {
       padding: 0;
       margin: 0;
       width: 100%;
       list-style: none;
     }
 
-    nav ul li 
-    {
+    nav ul li {
       width: 100%;
       margin-bottom: 5px;
     }
 
-    nav ul li a 
-    {
+    nav ul li a {
       display: block;
       padding: 15px 25px;
       text-decoration: none;
@@ -70,16 +62,14 @@
       transition: all 0.3s ease;
     }
 
-    nav ul li a:hover 
-    {
+    nav ul li a:hover {
       background-color: #c4c4c4;
       color: #000000;
       border-left: 4px solid #000000;
       padding-left: 30px;
     }
 
-    main 
-    {
+    main {
       flex: 1;
       display: flex;
       justify-content: center;
@@ -88,18 +78,15 @@
       gap: 40px;
     }
 
-    .booking-option 
-    {
+    .booking-option {
       transition: transform 0.2s;
     }
 
-    .booking-option:hover 
-    {
+    .booking-option:hover {
       transform: scale(1.05);
     }
 
-    .image-button img 
-    {
+    .image-button img {
       max-width: 350px;
       width: 100%;
       height: auto;
@@ -114,11 +101,11 @@
     <div class="logo">
       <img src="UTeM Clear.png" alt="Pusat Sukan Logo">
     </div>
-    <nav>
-      <ul>
+    <nav style="height: 70vh;">
+      <ul style="display: flex; flex-direction: column; height: 100%; list-style: none; padding: 0; margin: 0;">
         <li><a href="MainPage.html">BOOKING SPACE</a></li>
         <li><a href="Approval.php">APPROVAL/STATUS</a></li>
-        <li style="margin-top: 400px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
+        <li style="margin-top: auto; padding-bottom: 20px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
       </ul>
     </nav>
   </header>

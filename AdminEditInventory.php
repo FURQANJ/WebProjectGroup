@@ -2,6 +2,12 @@
 session_start();
 include "db.php";
 
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: index.php");
+    exit();
+}
+
+$admin_id = $_SESSION['admin_id'];
 $target_id = $_GET['id'] ?? '';
 $type = $_GET['type'] ?? '';
 
@@ -42,7 +48,6 @@ if ($type === 'EQUIPMENT') {
 
 if (isset($_POST['update'])) {
     $new_status = $_POST['status'];
-    $admin_id = $_POST['admin_id'];
     $notes = $_POST['notes'];
 
     if ($type === 'EQUIPMENT') {
@@ -148,27 +153,15 @@ if (isset($_POST['update'])) {
 
         main {
             flex: 1;
+            padding: 60px 40px;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 700px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 35px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            align-self: flex-start;
-            text-align: left;
+            flex-direction: column;
         }
 
         .back-btn {
             display: block;
             text-align: left;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             transition: transform 0.2s ease;
             width: max-content;
         }
@@ -181,6 +174,24 @@ if (isset($_POST['update'])) {
             width: 35px;
             height: auto;
             vertical-align: middle;
+        }
+
+        .form-centered {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 35px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: left;
         }
 
         h2 {
@@ -290,67 +301,60 @@ if (isset($_POST['update'])) {
             <img src="UTeM Clear.png" alt="UTeM Logo">
         </div>
 
-        <nav>
-            <ul>
+        <nav style="height: 70vh;">
+            <ul style="display: flex; flex-direction: column; height: 100%; list-style: none; padding: 0; margin: 0;">
                 <li><a href="AdminBookingLog.php">BOOKING LOG</a></li>
                 <li><a href="AdminBookingRequest.php">BOOKING REQUESTS</a></li>
                 <li><a href="AdminUpdate.php">COURT/EQUIPMENT UPDATE</a></li>
-                <li style="margin-top: 30px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
+                <li style="margin-top: auto; padding-bottom: 20px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <div class="container">
-            <a href="AdminUpdate.php" class="back-btn">
-                <img src="BackArrowButton.png" alt="Back" class="back-arrow-img">
-            </a>
+        <a href="AdminUpdate.php" class="back-btn">
+            <img src="BackArrowButton.png" alt="Back" class="back-arrow-img">
+        </a>
 
-            <h2>Equipment/Court Update</h2>
+        <div class="form-centered">
+            <div class="container">
+                <h2>Equipment/Court Update</h2>
 
-            <form id="updateForm" action="" method="post" onsubmit="animateSubmitButton(event)">
-                
-                <input type="hidden" name="update" value="1">
+                <form id="updateForm" action="" method="post" onsubmit="animateSubmitButton(event)">
+                    
+                    <input type="hidden" name="update" value="1">
 
-                <div class="meta-text"><strong>ID:</strong> <?php echo htmlspecialchars($target_id); ?></div>
-                <div class="meta-text"><strong>Name:</strong> <?php echo htmlspecialchars($details); ?></div>
-                <div class="meta-text" style="margin-bottom: 25px;"><strong>Type:</strong> <?php echo htmlspecialchars($type); ?></div>
+                    <div class="meta-text"><strong>ID:</strong> <?php echo htmlspecialchars($target_id); ?></div>
+                    <div class="meta-text"><strong>Name:</strong> <?php echo htmlspecialchars($details); ?></div>
+                    <div class="meta-text" style="margin-bottom: 25px;"><strong>Type:</strong> <?php echo htmlspecialchars($type); ?></div>
 
-                <div class="form-group" style="max-width: 300px;">
-                    <label for="status">Availability Status :</label>
-                    <select id="status" name="status">
-                        <option value="AVAILABLE" <?php echo ($status === 'AVAILABLE') ? 'selected' : ''; ?>>AVAILABLE</option>
-                        <option value="NOT AVAILABLE" <?php echo ($status === 'NOT AVAILABLE') ? 'selected' : ''; ?>>NOT AVAILABLE</option>
-                        <option value="UNDER MAINTENANCE" <?php echo ($status === 'UNDER MAINTENANCE') ? 'selected' : ''; ?>>UNDER MAINTENANCE</option>
-                    </select>
-                </div>
-
-                <?php if ($type === 'EQUIPMENT') { ?>
                     <div class="form-group" style="max-width: 300px;">
-                        <label for="quantity">Quantity Count :</label>
-                        <input type="number" id="quantity" name="quantity" value="<?php echo htmlspecialchars($quantity); ?>" min="0" required>
+                        <label for="status">Availability Status :</label>
+                        <select id="status" name="status">
+                            <option value="AVAILABLE" <?php echo ($status === 'AVAILABLE') ? 'selected' : ''; ?>>AVAILABLE</option>
+                            <option value="NOT AVAILABLE" <?php echo ($status === 'NOT AVAILABLE') ? 'selected' : ''; ?>>NOT AVAILABLE</option>
+                            <option value="UNDER MAINTENANCE" <?php echo ($status === 'UNDER MAINTENANCE') ? 'selected' : ''; ?>>UNDER MAINTENANCE</option>
+                        </select>
                     </div>
-                <?php } ?>
 
-                <div class="form-group" style="max-width: 300px;">
-                    <label for="admin_id">Updated By (Admin ID) :</label>
-                    <select id="admin_id" name="admin_id" required>
-                        <option value="1">1 (IBAD)</option>
-                        <option value="2">2 (EMMIRUL)</option>
-                        <option value="3">3 (HASSAN)</option>
-                    </select>
-                </div>
+                    <?php if ($type === 'EQUIPMENT') { ?>
+                        <div class="form-group" style="max-width: 300px;">
+                            <label for="quantity">Quantity Count :</label>
+                            <input type="number" id="quantity" name="quantity" value="<?php echo htmlspecialchars($quantity); ?>" min="0" required>
+                        </div>
+                    <?php } ?>
 
-                <div class="form-group">
-                    <label for="notes">Maintenance Report / Notes</label>
-                    <textarea id="notes" name="notes" placeholder="Type report here..." required><?php echo htmlspecialchars($previous_notes); ?></textarea>
-                </div>
+                    <div class="form-group">
+                        <label for="notes">Maintenance Report / Notes</label>
+                        <textarea id="notes" name="notes" placeholder="Type report here..." required><?php echo htmlspecialchars($previous_notes); ?></textarea>
+                    </div>
 
-                <div class="submit-btn-container">
-                    <button type="submit" id="submitBtn" class="submit-btn">Update Status</button>
-                </div>
+                    <div class="submit-btn-container">
+                        <button type="submit" id="submitBtn" class="submit-btn">Update Status</button>
+                    </div>
 
-            </form>
+                </form>
+            </div>
         </div>
     </main>
 
