@@ -4,7 +4,7 @@ include "db.php";
 $courtFilter = $_POST['court'] ?? '';
 $dateFilter = $_POST['date'] ?? '';
 $statusFilter = $_POST['status'] ?? '';
-$sortFilter = $_POST['sort'] ?? 'DESC'; // Default to latest (DESC)
+$sortFilter = $_POST['sort'] ?? 'DESC'; // default sorting jadi latest  
 
 $query = "SELECT * FROM booking";
 $result = mysqli_query($conn, $query);

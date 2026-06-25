@@ -91,7 +91,6 @@ $result = $conn->query($sql);
       margin-bottom: 25px;
     }
 
-    /* Synchronized Table Styling */
     table {
       width: 100%;
       border-collapse: collapse;
