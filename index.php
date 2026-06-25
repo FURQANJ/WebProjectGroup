@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       if ($userRow['password'] === $password) {
         $_SESSION['admin_id'] = $userRow['admin_id'];
         $_SESSION['role'] = "admin";
-        header("Location: adminhome.html");
+        header("Location: adminhome.php");
         exit();
       } else {
         echo "<script>alert('Password Admin salah!');</script>";

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Pusat Sukan Admin Page</title>
+    <title>Pusat Sukan Court Booking</title>
     <style>
         * {
             box-sizing: border-box;
@@ -92,23 +92,6 @@
             height: auto;
             display: block;
         }
-
-        .back-btn {
-            display: inline-block;
-            background: #294797;
-            color: white;
-            text-decoration: none;
-            padding: 9px 18px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            }
-
-        .back-btn:hover {
-            background: #1f3675;
-            }
-            
     </style>
 </head>
 
@@ -116,22 +99,29 @@
 
     <header>
         <div class="logo">
-            <img src="UTeM Clear.png" alt="UTeM Logo">
+            <img src="UTeM Clear.png" alt="Pusat Sukan Logo">
         </div>
-
-<nav style="height: 70vh;">
-    <ul style="display: flex; flex-direction: column; height: 100%; list-style: none; padding: 0; margin: 0;">
-        <li><a href="AdminBookingLog.php">BOOKING LOG</a></li>
-        <li><a href="AdminBookingRequest.php">BOOKING REQUESTS</a></li>
-        <li><a href="AdminUpdate.php">COURT/EQUIPMENT UPDATE</a></li>
-        <li style="margin-top: auto; padding-bottom: 20px;"><a href="index.php" style="color: #c62828;">LOGOUT</a></li>
-    </ul>
-</nav>
+        <nav style="height: 70vh;">
+            <ul style="display: flex; flex-direction: column; height: 100%; list-style: none; padding: 0; margin: 0;">
+                <li><a href="MainPage.html">BOOKING SPACE</a></li>
+                <li><a href="Approval.php">APPROVAL/STATUS</a></li>
+                <li style="margin-top: auto; padding-bottom: 20px;"><a href="index.php"
+                        style="color: #c62828;">LOGOUT</a></li>
+            </ul>
+        </nav>
     </header>
 
     <main>
+        <div class="booking-option">
+            <a href="BookingEquipment.php" class="image-button">
+                <img src="Option 2.png" alt="Book with Equipment">
+            </a>
+        </div>
 
-
+        <div class="booking-option">
+            <a href="BookingCourt.php" class="image-button">
+                <img src="Option 1.png" alt="Book Court Only">
+            </a>
         </div>
     </main>
 

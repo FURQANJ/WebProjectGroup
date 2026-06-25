@@ -174,7 +174,7 @@ $result = $conn->query($sql);
 
 <main>
     <div class="container">
-        <a href="adminhome.html" class="back-btn">
+        <a href="adminhome.php" class="back-btn">
             <img src="BackArrowButton.png" alt="Back" class="back-arrow-img">
         </a>
     </div>

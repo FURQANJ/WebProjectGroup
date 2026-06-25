@@ -4,6 +4,15 @@ include "db.php";
 
 $current_guest = $_SESSION['guest_id'] ?? null;
 $guest_name = $_SESSION['guest_name'] ?? 'Unknown User';
+$guest_email = '';
+
+if ($current_guest) {
+    $email_query = mysqli_query($conn, "SELECT email FROM guest WHERE guest_id = '$current_guest' LIMIT 1");
+    if ($email_query && mysqli_num_rows($email_query) > 0) {
+        $email_row = mysqli_fetch_assoc($email_query);
+        $guest_email = $email_row['email'];
+    }
+}
 
 // ambik data court yg AVAILABLE ja
 $available_courts = [];
@@ -351,7 +360,7 @@ if (isset($_POST['submit'])) {
             </div>
             <div class="form-group">
               <label>Email</label>
-              <input type="email" id="email" name="email" placeholder="student@utem.edu.my" required>
+              <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($guest_email); ?>" readonly style="background-color: #e9ecef; cursor: not-allowed; color: #495057;" required>
             </div>
           </div>
 

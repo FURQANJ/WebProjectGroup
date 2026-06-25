@@ -3,20 +3,26 @@ session_start();
 include "db.php";
 
 $current_guest = $_SESSION['guest_id'] ?? null;
-$guest_name = $_SESSION['guest_name'] ?? null;
+$guest_name = $_SESSION['guest_name'] ?? 'Unknown User';
+$guest_email = '';
 
-// fallback kalau guest name xde dlm session, ambik dari database
-if ($current_guest && !$guest_name) {
-    $name_query = mysqli_query($conn, "SELECT guest_name FROM guest WHERE guest_id = '$current_guest' LIMIT 1");
-    if ($name_query && mysqli_num_rows($name_query) > 0) {
-        $name_row = mysqli_fetch_assoc($name_query);
-        $guest_name = $name_row['guest_name'];
-        $_SESSION['guest_name'] = $guest_name;
+if ($current_guest) {
+    // ambik email
+    $email_query = mysqli_query($conn, "SELECT email FROM guest WHERE guest_id = '$current_guest' LIMIT 1");
+    if ($email_query && mysqli_num_rows($email_query) > 0) {
+        $email_row = mysqli_fetch_assoc($email_query);
+        $guest_email = $email_row['email'];
     }
-}
-
-if (!$guest_name) {
-    $guest_name = 'Unknown User';
+    
+    // fallback kalau guest_name xde dlm session
+    if ($guest_name === 'Unknown User') {
+        $name_query = mysqli_query($conn, "SELECT guest_name FROM guest WHERE guest_id = '$current_guest' LIMIT 1");
+        if ($name_query && mysqli_num_rows($name_query) > 0) {
+            $name_row = mysqli_fetch_assoc($name_query);
+            $guest_name = $name_row['guest_name'];
+            $_SESSION['guest_name'] = $guest_name;
+        }
+    }
 }
 
 // ambik data court
@@ -375,7 +381,7 @@ if (isset($_POST['submit'])) {
             </div>
             <div class="form-group">
               <label>Email</label>
-              <input type="email" id="email" name="email" placeholder="student@utem.edu.my" required>
+              <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($guest_email); ?>" readonly style="background-color: #e9ecef; cursor: not-allowed; color: #495057;" required>
             </div>
           </div>
 
