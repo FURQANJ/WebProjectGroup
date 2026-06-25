@@ -185,7 +185,7 @@ $result = $conn->query($sql);
       <table>
         <tr>
           <th>Booking ID</th>
-          <th>Name / Organization</th>
+          <th>Name</th>
           <th>Number</th>
           <th>Court</th>
           <th>Equipment</th>
@@ -215,7 +215,7 @@ $result = $conn->query($sql);
           <td><?php echo htmlspecialchars($date); ?></td>
           <td><?php echo htmlspecialchars($timeFrom . " - " . $timeTo); ?></td>
           <td>
-            <a class="view-btn" href="adminBookingDetails.php?id=<?php echo $row['booking_id']; ?>">
+            <a class="view-btn" href="AdminBookingDetails.php?id=<?php echo $row['booking_id']; ?>">
               View
             </a>
           </td>
