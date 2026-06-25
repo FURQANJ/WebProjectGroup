@@ -4,6 +4,7 @@ include("db.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $matrik = mysqli_real_escape_string($conn, $_POST['matrik']);
+    $guest_name = mysqli_real_escape_string($conn, $_POST['guest_name']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
@@ -11,14 +12,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($password !== $confirmPassword) {
         echo "<script>alert('Password tidak sama!');</script>";
     } else {
-        // Semak jika matrik/emel dah berdaftar & verified
+
+        // check klau matrik/emel dah berdaftar & verified
         $checkSql = "SELECT * FROM guest WHERE (matrik='$matrik' OR email='$email') AND is_verified=1 LIMIT 1";
         $checkResult = mysqli_query($conn, $checkSql);
         
         if ($checkResult && mysqli_num_rows($checkResult) > 0) {
             echo "<script>alert('No. Matrik atau emel sudah didaftarkan!');</script>";
         } else {
-            // Generate OTP
+            // generate otp
             $otp = rand(100000, 999999);
             $expiry = date("Y-m-d H:i:s", strtotime("+10 minutes"));
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -26,15 +28,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Buang rekod lama yang belum verify
             mysqli_query($conn, "DELETE FROM guest WHERE email='$email' AND is_verified=0");
 
-            // Masukkan rekod pendaftaran baru
-            $sql = "INSERT INTO guest (matrik, email, password, otp_code, otp_expiry, is_verified)
-                    VALUES ('$matrik', '$email', '$hashedPassword', '$otp', '$expiry', 0)";
+            // masuk rekod pendaftaran baru dgn nama
+            $sql = "INSERT INTO guest (matrik, guest_name, email, password, otp_code, otp_expiry, is_verified)
+                    VALUES ('$matrik', '$guest_name', '$email', '$hashedPassword', '$otp', '$expiry', 0)";
 
             if (mysqli_query($conn, $sql)) {
                 
-                // Menggunakan fungsi mail() asal untuk hantar ke Papercut
+                // guna mail() asal untuk hantar gi  Papercut
                 $subject = "Your OTP Code - Pusat Sukan UTeM";
-                $message = "Salam, $matrik!\n\nKod OTP anda ialah: $otp\nKod ini akan tamat dalam masa 10 minit.\n\nTerima kasih,\nPusat Sukan UTeM";
+                $message = "Salam, $guest_name!\n\nKod OTP anda ialah: $otp\nKod ini akan tamat dalam masa 10 minit.\n\nTerima kasih,\nPusat Sukan UTeM";
                 $headers = "From: no-reply@pusatsukanutem.com";
 
                 if (mail($email, $subject, $message, $headers)) {
@@ -59,6 +61,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8">
   <title>Pusat Sukan UTeM - New Member</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .warning-text {
+      display: block;
+      width: 80%;
+      margin: -5px auto 10px auto;
+      text-align: left;
+      font-size: 11px;
+      color: #c62828;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -76,12 +89,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <h2>New Member Registration</h2>
       <form method="POST" action="">
         <input type="text" name="matrik" placeholder="No Matrik" required>
-        <input type="email" name="email" placeholder="Gmail" required>
+        
+        <input type="text" name="guest_name" placeholder="Full Name (As per Student Card)" required>
+        <span class="warning-text">* Please enter your real full name. This cannot be changed later and will be used for all official bookings.</span>
+
+        <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
         <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
         <button type="submit" class="student-btn">Register</button>
         <div class="links">
-          <a href="index.php" class="nav-button">⬅ Back to Login</a>
+          <a href="index.php" class="nav-button" style="color: #ffffff;">⬅ Back to Login</a>
         </div>
       </form>
     </div>

@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $update = "UPDATE guest SET otp_code='$otp', otp_expiry='$expiry' WHERE email='$email'";
         mysqli_query($conn, $update);
  
-        // Menggunakan fungsi mail() asal untuk hantar ke Papercut
+        // guna mail() asal untuk hantar ke Papercut
         $subject = "Password Reset OTP - Pusat Sukan UTeM";
         $message = "Salam!\n\nKod OTP untuk set semula kata laluan anda ialah: $otp\nKod ini akan tamat dalam masa 10 minit.\n\nTerima kasih,\nPusat Sukan UTeM";
         $headers = "From: no-reply@pusatsukanutem.com";
@@ -56,16 +56,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="login-box">
       <h2>Forgot Password</h2>
       <form method="POST" action="">
-        <input type="email" name="email" placeholder="Enter your registered Gmail" required>
+        <input type="email" name="email" placeholder="Enter your email" required>
         <button type="submit" class="student-btn">Send OTP</button>
       </form>
       <div class="links">
-        <a href="index.php" class="nav-button">⬅ Back to Login</a>
+        <a href="index.php" class="nav-button" style="color: #ffffff;">⬅ Back to Login</a>
       </div>
     </div>
   </main>
 
- <footer>
+  <footer>
     <div class="notice">
       <p><strong>Best Viewed By Users:</strong></p>
       <p>Users must be responsible for equipments that are borrowed.</p>
